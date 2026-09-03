@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vesper.ai — Operational AI Infrastructure</title>
-  <meta name="description" content="Deploy adaptive AI agents that learn, execute, and scale operational tasks across your business.">
+  <title>Evoxia — Web, Mobile & Graphic Design Studio</title>
+  <meta name="description" content="Evoxia is a premier digital engineering and design agency specializing in full-cycle web development, mobile applications, and world-class UI/UX graphic design.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cg transform='rotate(-30 12 12)'%3E%3Ccircle cx='7.3' cy='3.2' r='1.45'/%3E%3Crect x='5.5' y='4.7' width='3.6' height='14.6' rx='1.8'/%3E%3Crect x='14.9' y='4.7' width='3.6' height='14.6' rx='1.8'/%3E%3Ccircle cx='16.7' cy='20.8' r='1.45'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,30 +35,33 @@
 
     :root {
       --bg: #000000;
+      --surface: #0a0a0a;
+      --surface-glass: rgba(16, 16, 18, 0.7);
       --text: #ffffff;
       --muted: #9a9a9a;
       --stat: #d8d8d8;
       --border: rgba(255, 255, 255, 0.16);
       --border-soft: rgba(255, 255, 255, 0.12);
 
-      --logo: 15.5px;
+      --logo: 16px;
       --logo-mark: 22px;
       --nav: 14px;
       --nav-h: 40px;
       --btn: 13.5px;
       --btn-h: 40px;
-      --hero-btn-h: 42px;
-      --h1: 48px;
-      --lede: 15.5px;
+      --hero-btn-h: 44px;
+      --h1: 52px;
+      --lede: 16px;
       --badge: 12.5px;
       --stat-size: 13.5px;
-      --header-y: 22px;
-      --header-x: 40px;
-      --stats-x: 72px;
-      --stats-y: 36px;
-      --hero-gap: 85px;
-      --copy-max: 860px;
-      --lede-max: 470px;
+      --header-y: 20px;
+      --header-x: 48px;
+      --section-pad: 96px 32px;
+      --copy-max: 880px;
+      --lede-max: 560px;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
     }
 
     *, *::before, *::after {
@@ -84,6 +87,7 @@
       background: var(--bg, #000000);
       color: #ffffff;
       color: var(--text, #ffffff);
+      line-height: 1.6;
     }
 
     body.intro-active {
@@ -106,7 +110,6 @@
 
     /* ========================================================
        ISOLATED CINEMATIC THREE.JS ROBOT INTRO OVERLAY
-       (Sitting above the website at z-index: 99999; completely removable)
        ======================================================== */
     #evoxia-intro-overlay {
       position: fixed;
@@ -183,7 +186,7 @@
       font-style: italic;
       font-weight: 400;
       color: #ffffff;
-      text-shadow: 0 0 35px rgba(255, 255, 255, 0.6), 0 0 70px rgba(255, 255, 255, 0.3);
+      text-shadow: 0 0 35px rgba(255, 255, 255, 0.6), 0 0 70px rgba(59, 130, 246, 0.3);
     }
 
     .intro-brand-svg {
@@ -208,7 +211,7 @@
     }
 
     /* ========================================================
-       ACTUAL SINGLE-VIEWPORT WEBSITE (EXACT THEME & TOKENS)
+       EVOXIA OFFICIAL PORTFOLIO THEME & SECTIONS
        ======================================================== */
     /* Grain at z-index 100 */
     .grain {
@@ -222,69 +225,72 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    /* Background Video Layer */
-    .hero-photo {
+    /* Background Ambient Video Layer */
+    .ambient-backdrop {
       position: fixed;
       inset: 0;
       z-index: 0;
       overflow: hidden;
       pointer-events: none;
-      opacity: 1;
+      opacity: 0.85;
     }
 
-    .hero-photo video {
+    .ambient-backdrop video {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      opacity: 0.6;
       display: block;
+      filter: saturate(1.1) brightness(0.9);
     }
 
-    .hero-photo::after {
+    .ambient-backdrop::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 15%, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.8) 100%),
-                  linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.92) 90%, #000000 100%);
+      background: radial-gradient(circle at 50% 15%, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.85) 100%),
+                  linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 30%, rgba(0, 0, 0, 0.95) 90%, #000000 100%);
       pointer-events: none;
     }
 
-    /* Single-Viewport Page Grid */
     .page {
       position: relative;
       z-index: 1;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
+      width: 100%;
       min-height: 100vh;
-      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Desktop Lock ≥901px */
-    @media (min-width: 901px) {
-      html, body {
-        height: 100%;
-        overflow: hidden;
-      }
-      .page {
-        height: 100vh;
-        height: 100dvh;
-        overflow: hidden;
-      }
-    }
-
-    /* Header (3-Column Grid) */
+    /* Sticky Navigation Header */
     header.header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      padding: var(--header-y) var(--header-x) 10px;
-      z-index: 50;
-      position: relative;
+      padding: var(--header-y) var(--header-x);
+      z-index: 80;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(0, 0, 0, 0.55);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: padding 0.3s ease, background 0.3s ease;
+    }
+
+    header.header.scrolled {
+      padding: 14px var(--header-x);
+      background: rgba(4, 4, 6, 0.82);
+      border-bottom-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .logo {
       display: inline-flex;
       align-items: center;
-      gap: 9px;
+      gap: 10px;
       justify-self: start;
       font-size: var(--logo);
       font-weight: 600;
@@ -319,16 +325,16 @@
 
     .nav-pill {
       height: var(--nav-h);
-      padding: 0 18px;
+      padding: 0 16px;
       border-radius: 7px;
       overflow: hidden;
       position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(198, 198, 198, 0.55);
-      background: linear-gradient(105deg, #050505 0%, #2a2a2a 48%, #4a4a4a 100%);
-      color: #f3f3f3;
+      border: 1px solid rgba(198, 198, 198, 0.45);
+      background: linear-gradient(105deg, #050505 0%, #1f1f1f 48%, #383838 100%);
+      color: #e5e5e5;
       font-size: var(--nav);
       font-weight: 400;
       letter-spacing: -0.01em;
@@ -351,16 +357,19 @@
     }
 
     .nav-pill:hover {
-      border-color: rgba(235, 235, 235, 0.9);
-      background: linear-gradient(105deg, #111111 0%, #3a3a3a 45%, #6a6a6a 100%);
+      border-color: rgba(235, 235, 235, 0.85);
+      background: linear-gradient(105deg, #111111 0%, #353535 45%, #555555 100%);
       box-shadow: 0 0 18px rgba(200, 210, 230, 0.18);
       color: #ffffff;
       transform: translateY(-1px);
     }
 
     /* Right Header & Burger */
-    .header-cta {
+    .header-right {
       justify-self: end;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .burger {
@@ -369,8 +378,8 @@
       height: 42px;
       border-radius: 6px;
       border: 1px solid var(--border);
-      background: rgba(8, 8, 8, 0.55);
-      z-index: 60;
+      background: rgba(12, 12, 14, 0.7);
+      z-index: 90;
       place-content: center;
       gap: 5px;
       cursor: pointer;
@@ -388,8 +397,8 @@
     }
 
     .burger:hover {
-      border-color: rgba(255, 255, 255, 0.32);
-      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.08);
     }
 
     body.menu-open .burger span:nth-child(1) {
@@ -408,8 +417,8 @@
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 40;
-      background: rgba(8, 8, 8, 0.42);
+      z-index: 70;
+      background: rgba(0, 0, 0, 0.7);
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.28s ease, visibility 0.28s ease;
@@ -431,8 +440,9 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 8px;
       height: var(--btn-h);
-      padding: 0 16px;
+      padding: 0 18px;
       border-radius: 6px;
       font-size: var(--btn);
       font-weight: 500;
@@ -440,7 +450,7 @@
       line-height: 1;
       white-space: nowrap;
       cursor: pointer;
-      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease, filter 0.35s ease, transform 0.2s ease;
+      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease, transform 0.2s ease;
     }
 
     .btn::after {
@@ -459,8 +469,8 @@
     }
 
     .btn-solid {
-      background: linear-gradient(180deg, #ffffff 0%, #e7e7e7 48%, #cfcfcf 100%);
-      color: #111111;
+      background: linear-gradient(180deg, #ffffff 0%, #eaeaea 48%, #cfcfcf 100%);
+      color: #0d0d0d;
       border: 1px solid #ffffff;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
     }
@@ -468,88 +478,80 @@
     .btn-solid:hover {
       background: linear-gradient(180deg, #ffffff 0%, #f3f6ff 42%, #d5def2 100%);
       border-color: #f2f6ff;
-      box-shadow: inset 0 1px 0 #ffffff, 0 0 22px rgba(186, 208, 255, 0.35), 0 8px 18px rgba(255, 255, 255, 0.12);
+      box-shadow: inset 0 1px 0 #ffffff, 0 0 24px rgba(186, 208, 255, 0.4), 0 8px 18px rgba(255, 255, 255, 0.14);
       transform: translateY(-1px);
-    }
-
-    .hero-btn.btn-solid:hover {
-      box-shadow: inset 0 1px 0 #ffffff, 0 0 26px rgba(186, 208, 255, 0.4), 0 8px 18px rgba(255, 255, 255, 0.14);
     }
 
     .btn-ghost {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.45) 50%, rgba(160, 175, 200, 0.08));
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.5) 46%, rgba(150, 170, 200, 0.1));
       color: #ffffff;
       border: 1px solid rgba(198, 198, 198, 0.45);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    }
-
-    .btn-ghost:hover {
-      background: linear-gradient(135deg, rgba(210, 225, 255, 0.18) 0%, rgba(0, 0, 0, 0.35) 48%, rgba(180, 195, 220, 0.16) 100%);
-      border-color: rgba(220, 230, 255, 0.75);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 0 20px rgba(170, 200, 255, 0.22);
-      transform: translateY(-1px);
-    }
-
-    .hero-btn.btn-ghost {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.5) 46%, rgba(150, 170, 200, 0.1));
-      border: 1px solid rgba(198, 198, 198, 0.55);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
     }
 
-    .hero-btn.btn-ghost:hover {
+    .btn-ghost:hover {
+      background: linear-gradient(135deg, rgba(210, 225, 255, 0.2) 0%, rgba(0, 0, 0, 0.4) 48%, rgba(180, 195, 220, 0.18) 100%);
       border-color: rgba(220, 230, 255, 0.8);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 0 24px rgba(170, 200, 255, 0.28);
+      transform: translateY(-1px);
     }
 
     .hero-btn {
       height: var(--hero-btn-h);
-      padding: 0 18px;
+      padding: 0 22px;
+      font-size: 14.5px;
     }
 
-    /* Hero Section (Bottom-Aligned) */
-    main.hero {
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding: 9px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(125, 125, 125, 0.4) 0%, rgba(42, 42, 42, 0.6) 52%, rgba(10, 10, 10, 0.8) 100%);
+      color: #f2f2f2;
+      font-size: var(--badge);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .badge-star {
+      width: 16px;
+      height: 18px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+      animation: in-star 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+      transform-origin: center;
+    }
+
+    /* Hero Section */
+    section.hero {
+      min-height: 100vh;
       display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 8px 24px var(--hero-gap);
-      min-height: 0;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 120px 24px 48px;
       position: relative;
     }
 
     .hero-copy {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       max-width: var(--copy-max);
       width: 100%;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 22px;
-      padding: 9px 15px;
-      border: 0;
-      border-radius: 5px;
-      background: linear-gradient(90deg, #7d7d7d 0%, #2a2a2a 52%, #0a0a0a 100%);
-      color: #f2f2f2;
-      font-size: var(--badge);
-      font-weight: 400;
-      letter-spacing: -0.01em;
-    }
-
-    .badge-star {
-      width: 18px;
-      height: 20px;
-      flex-shrink: 0;
-      filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.45));
-      animation: in-star 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
-      transform-origin: center;
+      margin-bottom: 56px;
     }
 
     .hero-title {
@@ -557,7 +559,7 @@
       font-size: var(--h1);
       font-weight: 500;
       letter-spacing: -0.045em;
-      line-height: 1.12;
+      line-height: 1.1;
       color: #ffffff;
       display: flex;
       flex-direction: column;
@@ -568,7 +570,7 @@
     .headline-line {
       display: block;
       overflow: hidden;
-      padding: 0.06em 0.15em 0.14em;
+      padding: 0.05em 0.15em 0.12em;
     }
 
     .hero-title em {
@@ -577,18 +579,18 @@
       font-weight: 400;
       font-size: 1.08em;
       letter-spacing: -0.03em;
-      color: #9a9a9a;
+      color: #b0b0b0;
       display: inline-block;
       animation: in-em 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.72s both;
     }
 
     .lede {
       max-width: var(--lede-max);
-      margin-top: 18px;
-      color: #9a9a9a;
+      margin-top: 20px;
+      color: #a0a0a0;
       font-size: var(--lede);
       font-weight: 400;
-      line-height: 1.55;
+      line-height: 1.6;
       letter-spacing: -0.015em;
     }
 
@@ -597,30 +599,34 @@
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 10px;
-      margin-top: 26px;
+      gap: 12px;
+      margin-top: 32px;
     }
 
-    /* Stats Footer */
-    footer.stats {
+    /* Hero Stats Bar */
+    .hero-stats-bar {
+      width: 100%;
+      max-width: 1120px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 24px;
-      padding: 0 var(--stats-x) var(--stats-y);
-      padding-bottom: max(var(--stats-y), env(safe-area-inset-bottom));
-      color: var(--stat);
-      position: relative;
-      z-index: 10;
+      padding: 18px 36px;
+      border-radius: 12px;
+      background: rgba(14, 14, 18, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      z-index: 2;
     }
 
-    .stat {
+    .stat-item {
       display: inline-flex;
       align-items: center;
       gap: 14px;
       font-size: var(--stat-size);
       letter-spacing: -0.015em;
-      white-space: nowrap;
+      color: var(--stat);
     }
 
     .stat-icon {
@@ -635,6 +641,771 @@
       height: 21px;
       flex-shrink: 0;
       display: block;
+    }
+
+    /* General Section Layout */
+    section.section-block {
+      padding: var(--section-pad);
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .section-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .section-tag {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+      color: #9a9a9a;
+      margin-bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-tag::before, .section-tag::after {
+      content: '';
+      width: 18px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .section-heading {
+      font-size: 38px;
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.2;
+      color: #ffffff;
+      margin-bottom: 14px;
+    }
+
+    .section-heading em {
+      font-family: "Instrument Serif", "Times New Roman", Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      color: #a5a5a5;
+    }
+
+    .section-subtext {
+      color: #9a9a9a;
+      font-size: 15.5px;
+      line-height: 1.6;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+    }
+
+    .service-card {
+      position: relative;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(22, 22, 26, 0.6) 0%, rgba(10, 10, 12, 0.8) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 36px 30px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 255, 255, 0.05);
+    }
+
+    .service-card:hover::before {
+      opacity: 1;
+    }
+
+    .service-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: #ffffff;
+    }
+
+    .service-card h3 {
+      font-size: 21px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .service-card p {
+      font-size: 14.5px;
+      color: #a0a0a0;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+
+    .service-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tech-pill {
+      font-size: 12px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #d0d0d0;
+      letter-spacing: -0.01em;
+    }
+
+    /* Projects Showcase Section */
+    .projects-filter {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #8a8a8a;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.25s ease;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.08);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      width: 100%;
+    }
+
+    .project-card {
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(18, 18, 22, 0.7) 0%, rgba(8, 8, 10, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7), 0 0 24px rgba(255, 255, 255, 0.06);
+    }
+
+    .project-preview {
+      width: 100%;
+      height: 240px;
+      position: relative;
+      background: radial-gradient(circle at 50% 50%, #202025 0%, #0c0c0e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .project-preview-mockup {
+      width: 82%;
+      height: 72%;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      position: relative;
+    }
+
+    .mockup-header {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .mockup-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .mockup-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+      justify-content: center;
+    }
+
+    .mockup-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .mockup-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .project-info {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .project-category {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888888;
+      margin-bottom: 6px;
+    }
+
+    .project-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .project-desc {
+      font-size: 14px;
+      color: #9e9e9e;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    .project-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .project-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #ffffff;
+      transition: gap 0.2s ease, opacity 0.2s ease;
+    }
+
+    .project-link-btn:hover {
+      gap: 10px;
+      opacity: 0.85;
+    }
+
+    .projects-teaser {
+      margin-top: 36px;
+      width: 100%;
+      padding: 24px 32px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(90deg, rgba(20, 20, 24, 0.5) 0%, rgba(12, 12, 16, 0.8) 100%);
+      border: 1px dashed rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .teaser-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d0d0d0;
+      font-size: 14.5px;
+    }
+
+    /* Official Team Section */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      width: 100%;
+    }
+
+    .team-card {
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(20, 20, 24, 0.6) 0%, rgba(10, 10, 12, 0.85) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 30px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      position: relative;
+    }
+
+    .team-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 255, 255, 0.05);
+    }
+
+    .avatar-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2a2a2e 0%, #121214 100%);
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .avatar-initials {
+      font-size: 24px;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .member-role-badge {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #c4c4c4;
+      margin-bottom: 12px;
+    }
+
+    .member-name {
+      font-size: 18px;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .member-desc {
+      font-size: 13px;
+      color: #8c8c8c;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .member-skills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .skill-chip {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #a5a5a5;
+    }
+
+    /* Careers Banner (Join our company - Coming Soon) */
+    .careers-banner {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(30, 30, 36, 0.7) 0%, rgba(14, 14, 18, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 48px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      margin-top: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .careers-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .careers-info {
+      max-width: 620px;
+    }
+
+    .coming-soon-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+
+    .coming-soon-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.6; }
+    }
+
+    .careers-title {
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .careers-desc {
+      font-size: 15px;
+      color: #a0a0a0;
+      line-height: 1.6;
+    }
+
+    /* Social Media Section */
+    .socials-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      width: 100%;
+    }
+
+    .social-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(20, 20, 24, 0.5) 0%, rgba(10, 10, 12, 0.7) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .social-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.3);
+      background: linear-gradient(180deg, rgba(28, 28, 34, 0.7) 0%, rgba(16, 16, 20, 0.85) 100%);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+
+    .social-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #ffffff;
+    }
+
+    .social-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .social-handle {
+      font-size: 12.5px;
+      color: #8c8c8c;
+    }
+
+    /* Contact Section */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 48px;
+      width: 100%;
+    }
+
+    .contact-card {
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(20, 20, 24, 0.7) 0%, rgba(10, 10, 12, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .contact-item-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #ffffff;
+    }
+
+    .contact-item h4 {
+      font-size: 15px;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .contact-item p, .contact-item a {
+      font-size: 14px;
+      color: #9a9a9a;
+      transition: color 0.2s ease;
+    }
+
+    .contact-item a:hover {
+      color: #ffffff;
+    }
+
+    .contact-guarantee {
+      padding: 16px 20px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      color: #bfbfbf;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .contact-form {
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(20, 20, 24, 0.7) 0%, rgba(10, 10, 12, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #cccccc;
+      letter-spacing: -0.01em;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 14px;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.45);
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .form-select option {
+      background: #111111;
+      color: #ffffff;
+    }
+
+    .form-submit-btn {
+      width: 100%;
+      height: 46px;
+      font-size: 14.5px;
+      margin-top: 8px;
+    }
+
+    /* Toast Notification */
+    .toast-notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 120;
+      background: rgba(18, 18, 22, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      padding: 14px 20px;
+      color: #ffffff;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transform: translateY(100px);
+      opacity: 0;
+      visibility: hidden;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .toast-notification.show {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Footer */
+    footer.site-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 64px var(--header-x) 36px;
+      background: #040406;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: #7a7a7a;
+    }
+
+    .footer-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: #9a9a9a;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .status-bulb {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
     }
 
     /* Entrance Motion */
@@ -709,177 +1480,42 @@
       filter: none !important;
     }
 
-    /* ========================================================
-       EXACT RESPONSIVE BREAKPOINTS
-       ======================================================== */
-    /* 1280–1599 */
-    @media (min-width: 1280px) and (max-width: 1599px) {
-      :root {
-        --h1: 54px;
-        --lede: 16px;
-        --header-x: 48px;
-        --stats-x: 80px;
-        --copy-max: 900px;
+    /* Responsive Breakpoints */
+    @media (max-width: 1024px) {
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .socials-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
       }
     }
 
-    /* ≥1600 */
-    @media (min-width: 1600px) {
-      :root {
-        --logo: 17px;
-        --logo-mark: 24px;
-        --nav: 15px;
-        --nav-h: 44px;
-        --btn: 15px;
-        --btn-h: 44px;
-        --hero-btn-h: 48px;
-        --h1: 64px;
-        --lede: 18px;
-        --badge: 13.5px;
-        --stat-size: 15px;
-        --header-y: 28px;
-        --header-x: 64px;
-        --stats-x: 96px;
-        --stats-y: 44px;
-        --copy-max: 980px;
-        --lede-max: 540px;
-      }
-      .nav-pill { padding: 0 20px; }
-      .badge { margin-bottom: 26px; }
-      .lede { margin-top: 22px; }
-      .hero-actions { margin-top: 30px; gap: 12px; }
-      .stat-icon { width: 22px; height: 22px; }
-      .stat-icon-wide { width: 45px; height: 24px; }
-    }
-
-    /* ≥1920 */
-    @media (min-width: 1920px) {
-      :root {
-        --logo: 18px;
-        --logo-mark: 26px;
-        --nav: 16px;
-        --nav-h: 48px;
-        --btn: 16px;
-        --btn-h: 48px;
-        --hero-btn-h: 52px;
-        --h1: 76px;
-        --lede: 20px;
-        --badge: 14.5px;
-        --stat-size: 16px;
-        --header-y: 32px;
-        --header-x: 80px;
-        --stats-x: 120px;
-        --stats-y: 52px;
-        --copy-max: 1120px;
-        --lede-max: 620px;
-      }
-      nav.site-nav { gap: 10px; }
-      .nav-pill { padding: 0 22px; }
-      .btn { padding: 0 22px; }
-      .badge { padding: 10px 15px; }
-      .stat-icon-wide { width: 48px; height: 26px; }
-    }
-
-    /* ≥2560 */
-    @media (min-width: 2560px) {
-      :root {
-        --h1: 88px;
-        --lede: 22px;
-        --header-x: 120px;
-        --stats-x: 160px;
-        --copy-max: 1280px;
-        --lede-max: 680px;
-      }
-    }
-
-    /* 901–1279 */
-    @media (min-width: 901px) and (max-width: 1279px) {
-      :root {
-        --logo: 15px;
-        --nav: 13px;
-        --nav-h: 36px;
-        --btn: 13px;
-        --btn-h: 38px;
-        --hero-btn-h: 40px;
-        --h1: 42px;
-        --lede: 15px;
-        --badge: 12px;
-        --stat-size: 12.5px;
-        --header-y: 16px;
-        --header-x: 28px;
-        --stats-x: 36px;
-        --stats-y: 28px;
-        --hero-gap: 64px;
-        --copy-max: 760px;
-        --lede-max: 440px;
-      }
-      .nav-pill { padding: 0 14px; }
-      .badge { margin-bottom: 16px; }
-      .lede { margin-top: 14px; }
-      .hero-actions { margin-top: 20px; }
-    }
-
-    /* ≥901 and max-height 850 */
-    @media (min-width: 901px) and (max-height: 850px) {
-      :root {
-        --header-y: 14px;
-        --stats-y: 24px;
-        --hero-gap: 48px;
-        --h1: 40px;
-      }
-      .badge { margin-bottom: 12px; }
-      .lede { margin-top: 12px; }
-      .hero-actions { margin-top: 16px; }
-    }
-
-    /* ≥901 and max-height 720 */
-    @media (min-width: 901px) and (max-height: 720px) {
-      :root {
-        --h1: 34px;
-        --lede: 14px;
-        --hero-gap: 32px;
-        --stats-y: 18px;
-        --nav-h: 30px;
-        --btn-h: 34px;
-        --hero-btn-h: 36px;
-      }
-      .badge { margin-bottom: 8px; }
-    }
-
-    /* ≤900 Phone Breakpoint */
     @media (max-width: 900px) {
-      html, body {
-        height: auto;
-        overflow-y: auto;
+      :root {
+        --header-x: 20px;
+        --h1: 38px;
+        --section-pad: 72px 20px;
       }
 
-      :root {
-        --logo: 16px;
-        --btn: 15px;
-        --btn-h: 46px;
-        --hero-btn-h: 48px;
-        --h1: 36px;
-        --lede: 16.5px;
-        --badge: 13.5px;
-        --stat-size: 15px;
-        --header-y: 16px;
-        --header-x: 18px;
-        --stats-x: 20px;
-        --stats-y: 28px;
-        --hero-gap: 36px;
-        --copy-max: 100%;
-        --lede-max: 100%;
+      .intro-floating-brand {
+        font-size: 38px;
+      }
+
+      .intro-brand-svg {
+        width: 32px;
+        height: 32px;
       }
 
       header.header {
         grid-template-columns: 1fr auto auto;
-        gap: 8px;
-        padding: var(--header-y) var(--header-x);
-        padding-top: max(var(--header-y), env(safe-area-inset-top));
-      }
-
-      .logo, .header-cta, .burger {
-        z-index: 80;
+        gap: 12px;
       }
 
       .burger {
@@ -889,14 +1525,14 @@
       nav.site-nav {
         position: fixed;
         inset: 0;
-        z-index: 45;
+        z-index: 75;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
         gap: 12px;
         background: transparent;
-        padding: 96px 22px 32px;
+        padding: 96px 24px 32px;
         padding-top: max(96px, calc(env(safe-area-inset-top) + 88px));
         opacity: 0;
         visibility: hidden;
@@ -912,36 +1548,32 @@
 
       nav.site-nav .nav-pill {
         width: 100%;
-        height: 56px;
-        font-size: 19px;
+        height: 52px;
+        font-size: 17px;
         border-radius: 10px;
       }
 
-      main.hero {
-        padding: 20px 20px 64px;
-        align-items: flex-end;
-      }
-
-      footer.stats {
+      .hero-stats-bar {
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         gap: 16px;
-        padding: 0 var(--stats-x) var(--stats-y);
-        white-space: normal;
+        padding: 20px;
       }
 
-      .stat {
-        white-space: normal;
-        text-align: center;
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .careers-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 32px 24px;
       }
     }
 
-    /* ≤560 Phone Breakpoint */
-    @media (max-width: 560px) {
-      :root {
-        --h1: 34px;
-        --lede: 16px;
-        --header-x: 16px;
+    @media (max-width: 640px) {
+      .services-grid, .team-grid, .socials-grid {
+        grid-template-columns: 1fr;
       }
 
       .hero-actions {
@@ -951,6 +1583,10 @@
 
       .hero-actions .btn {
         width: 100%;
+      }
+
+      .section-heading {
+        font-size: 30px;
       }
     }
 
@@ -963,10 +1599,9 @@
       #evoxia-intro-overlay {
         display: none !important;
       }
-      .appear, .hero-photo, .hero h1 em, .badge-star {
+      .appear, .hero-title em, .badge-star {
         opacity: 1 !important;
         transform: none !important;
-        clip-path: none !important;
         filter: none !important;
       }
     }
@@ -976,9 +1611,9 @@
 
   <!-- ========================================================
        ISOLATED CINEMATIC THREE.JS ROBOT INTRO OVERLAY
-       (100% UNCHANGED — Sitting above the website at z-index: 99999)
+       (Sitting above the website at z-index: 99999; completely removable)
        ======================================================== -->
-  <div id="evoxia-intro-overlay" aria-label="Welcome">
+  <div id="evoxia-intro-overlay" aria-label="Welcome to Evoxia">
     <button type="button" class="intro-skip-btn" id="intro-skip-btn">Skip Intro ↗</button>
 
     <canvas id="intro-three-canvas"></canvas>
@@ -999,23 +1634,20 @@
   </div>
 
   <!-- ========================================================
-       ACTUAL SINGLE-VIEWPORT WEBSITE (EXACT THEME & ARCHITECTURE)
+       REAL EVOXIA COMPANY PORTFOLIO WEBSITE
        ======================================================== -->
-  <!-- Grain Layer at z-index: 100 -->
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- Background Video Layer -->
-  <div class="hero-photo" aria-hidden="true">
+  <div class="ambient-backdrop" aria-hidden="true">
     <video autoplay loop muted playsinline src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260818_072341_50851634-bbc3-4c33-9acc-7647d4db44aa.mp4"></video>
   </div>
 
-  <!-- Single-Viewport Grid Container -->
   <div class="page">
     <div class="menu-backdrop" id="menu-backdrop"></div>
 
-    <!-- Header (3-Column Grid) -->
+    <!-- Sticky Navigation Header -->
     <header class="header" id="main-header">
-      <a href="#top" class="logo appear appear--scale" style="--d: 0.08s;" aria-label="Vesper.ai">
+      <a href="#top" class="logo appear appear--scale" style="--d: 0.08s;" aria-label="Evoxia">
         <svg class="logo-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <g transform="rotate(-30 12 12)">
             <circle cx="7.3" cy="3.2" r="1.45"/>
@@ -1024,104 +1656,622 @@
             <circle cx="16.7" cy="20.8" r="1.45"/>
           </g>
         </svg>
-        <span>Vesper<span class="logo-suffix">.ai</span></span>
+        <span>Evoxia<span class="logo-suffix">.studio</span></span>
       </a>
 
       <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <a href="#benefits" class="nav-pill appear appear--scale" style="--d: 0.16s;">Benefits</a>
-        <a href="#how-it-works" class="nav-pill appear appear--soft" style="--d: 0.28s;">How It Works</a>
-        <a href="#faqs" class="nav-pill appear appear--scale" style="--d: 0.40s;">FAQs</a>
-        <a href="#pricing" class="nav-pill appear appear--soft" style="--d: 0.52s;">Pricing</a>
+        <a href="#services" class="nav-pill appear appear--scale" style="--d: 0.16s;">Services</a>
+        <a href="#projects" class="nav-pill appear appear--soft" style="--d: 0.24s;">Projects</a>
+        <a href="#team" class="nav-pill appear appear--scale" style="--d: 0.32s;">Team</a>
+        <a href="#careers" class="nav-pill appear appear--soft" style="--d: 0.40s;">Careers</a>
+        <a href="#socials" class="nav-pill appear appear--scale" style="--d: 0.48s;">Socials</a>
+        <a href="#contact" class="nav-pill appear appear--soft" style="--d: 0.56s;">Contact</a>
       </nav>
 
-      <a href="#start" class="btn btn-solid header-cta appear appear--scale" style="--d: 0.34s;">Start for Free</a>
-
-      <button type="button" class="burger appear appear--scale" style="--d: 0.34s;" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <div class="header-right">
+        <a href="#contact" class="btn btn-solid header-cta appear appear--scale" style="--d: 0.34s;">Start a Project</a>
+        <button type="button" class="burger appear appear--scale" style="--d: 0.34s;" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </header>
 
-    <!-- Main Hero (Bottom-Aligned) -->
-    <main class="hero" id="top">
-      <div class="hero-copy">
-        <div class="badge appear appear--pop" style="--d: 0.22s;">
-          <svg class="badge-star" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true">
-            <path d="M12 2.6C12.55 2.6 12.88 3.15 13.08 4.7c.62 4.7 1.52 5.6 6.22 6.22 1.55.2 2.1.53 2.1 1.08s-.55.88-2.1 1.08c-4.7.62-5.6 1.52-6.22 6.22-.2 1.55-.53 2.1-1.08 2.1s-.88-.55-1.08-2.1c-.62-4.7-1.52-5.6-6.22-6.22C3.15 12.88 2.6 12.55 2.6 12s.55-.88 2.1-1.08c4.7-.62 5.6-1.52 6.22-6.22C11.12 3.15 11.45 2.6 12 2.6Z"/>
-          </svg>
-          <span>Operational AI Infrastructure</span>
+    <!-- Hero Section -->
+    <main>
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <div class="badge appear appear--pop" style="--d: 0.22s;">
+            <svg class="badge-star" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true">
+              <path d="M12 2.6C12.55 2.6 12.88 3.15 13.08 4.7c.62 4.7 1.52 5.6 6.22 6.22 1.55.2 2.1.53 2.1 1.08s-.55.88-2.1 1.08c-4.7.62-5.6 1.52-6.22 6.22-.2 1.55-.53 2.1-1.08 2.1s-.88-.55-1.08-2.1c-.62-4.7-1.52-5.6-6.22-6.22C3.15 12.88 2.6 12.55 2.6 12s.55-.88 2.1-1.08c4.7-.62 5.6-1.52 6.22-6.22C11.12 3.15 11.45 2.6 12 2.6Z"/>
+            </svg>
+            <span>Digital Engineering & Design Studio</span>
+          </div>
+
+          <h1 class="hero-title">
+            <span class="headline-line"><span class="appear appear--mask" style="--d: 0.42s;">Crafting <em>digital products</em></span></span>
+            <span class="headline-line"><span class="appear appear--mask" style="--d: 0.62s;">that redefine industry standards.</span></span>
+          </h1>
+
+          <p class="lede appear appear--soft" style="--d: 0.82s; animation-duration: 1.25s;">
+            Evoxia is a premier collective building high-performance web applications, fluid mobile platforms, and immersive UI/UX brand experiences for modern visionaries.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#services" class="btn btn-solid hero-btn appear appear--btn" style="--d: 0.96s;">
+              <span>Explore Services</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#contact" class="btn btn-ghost hero-btn appear appear--side" style="--d: 1.10s;">Get in Touch</a>
+          </div>
         </div>
 
-        <h1 class="hero-title">
-          <span class="headline-line"><span class="appear appear--mask" style="--d: 0.42s;">Train <em>AI agents</em> on your</span></span>
-          <span class="headline-line"><span class="appear appear--mask" style="--d: 0.62s;">workflows in minutes.</span></span>
-        </h1>
+        <!-- Hero Stats Bar -->
+        <div class="hero-stats-bar appear appear--soft" style="--d: 1.2s;">
+          <div class="stat-item">
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="pillGrad1" x1="3" y1="2" x2="14" y2="22" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="#3a3a3a" stop-opacity="0.6"/>
+                </linearGradient>
+                <linearGradient id="pillGrad2" x1="13" y1="2" x2="24" y2="22" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#3a3a3a" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0.6"/>
+                </linearGradient>
+              </defs>
+              <rect x="3.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#pillGrad1)"/>
+              <rect x="13.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#pillGrad2)"/>
+              <rect x="9.2" y="10.9" width="5.6" height="2.2" rx="1.1" fill="#4a4a4a"/>
+            </svg>
+            <span>Full-Cycle Web & Mobile Engineering</span>
+          </div>
 
-        <p class="lede appear appear--soft" style="--d: 0.82s; animation-duration: 1.25s;">
-          Deploy adaptive AI agents that learn, execute, and scale operational tasks across your business.
-        </p>
+          <div class="stat-item">
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="2.4" y="2.4" width="19.2" height="19.2" rx="6.2" fill="#ffffff"/>
+              <path d="M12 7.1v7.4" stroke="#111111" stroke-width="1.85" stroke-linecap="round"/>
+              <path d="M8.15 12.35L12 16.2l3.85-3.85" stroke="#111111" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>99.8% On-Time Quality Delivery</span>
+          </div>
 
-        <div class="hero-actions">
-          <a href="#start" class="btn btn-solid hero-btn appear appear--btn" style="--d: 0.96s;">Start for Free</a>
-          <a href="#demo" class="btn btn-ghost hero-btn appear appear--side" style="--d: 1.10s;">See it in action</a>
+          <div class="stat-item">
+            <svg class="stat-icon-wide" viewBox="0 0 40 22" fill="none" aria-hidden="true">
+              <circle cx="10.2" cy="11" r="9.2" fill="#2b2b2b"/>
+              <polygon points="5.5,5.5 8,3 9.5,6" fill="#2b2b2b"/>
+              <polygon points="14.9,5.5 12.4,3 10.9,6" fill="#2b2b2b"/>
+              <ellipse cx="10.2" cy="12.1" rx="4.15" ry="3.7" fill="#f4f4f4"/>
+              <circle cx="8.9" cy="11.5" r="0.7" fill="#1a1a1a"/>
+              <circle cx="11.5" cy="11.5" r="0.7" fill="#1a1a1a"/>
+              <circle cx="20.2" cy="11" r="9.2" fill="#ffffff"/>
+              <circle cx="17.2" cy="9.8" r="1.7" fill="#111111"/>
+              <circle cx="23.2" cy="9.8" r="1.7" fill="#111111"/>
+              <ellipse cx="20.2" cy="12.2" rx="1.2" ry="0.8" fill="#111111"/>
+              <path d="M17.8 13.8c1.3 1.2 3.5 1.2 4.8 0" stroke="#111111" stroke-width="1.2" stroke-linecap="round"/>
+              <circle cx="30.2" cy="11" r="9.2" fill="#f26b1d"/>
+              <text x="30.2" y="15.1" font-family="'Inter', sans-serif" font-weight="700" font-size="12.5" fill="#ffffff" text-anchor="middle">e</text>
+            </svg>
+            <span>4 Core Specialists & Dedicated QA</span>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <!-- Services Section -->
+      <section class="section-block" id="services">
+        <div class="section-container">
+          <div class="section-header">
+            <span class="section-tag">Capabilities</span>
+            <h2 class="section-heading">Engineered for <em>exponential growth</em></h2>
+            <p class="section-subtext">We combine cutting-edge architecture with bespoke design to build products that captivate and convert.</p>
+          </div>
+
+          <div class="services-grid">
+            <!-- Service 1: Web Development -->
+            <div class="service-card">
+              <div class="service-icon-wrap">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="16 18 22 12 16 6"/>
+                  <polyline points="8 6 2 12 8 18"/>
+                  <line x1="14" y1="4" x2="10" y2="20"/>
+                </svg>
+              </div>
+              <h3>Web Development</h3>
+              <p>Scalable, ultra-fast web architectures engineered with React, Next.js, and modern backends. From high-conversion SaaS to complex enterprise dashboards.</p>
+              <div class="service-tags">
+                <span class="tech-pill">Next.js</span>
+                <span class="tech-pill">React</span>
+                <span class="tech-pill">Node.js</span>
+                <span class="tech-pill">Tailwind/CSS</span>
+                <span class="tech-pill">REST & GraphQL</span>
+              </div>
+            </div>
+
+            <!-- Service 2: Mobile Application Development -->
+            <div class="service-card">
+              <div class="service-icon-wrap">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+                  <line x1="12" y1="18" x2="12.01" y2="18"/>
+                </svg>
+              </div>
+              <h3>Mobile Applications</h3>
+              <p>Native-feel cross-platform mobile apps for iOS and Android. Seamless offline capabilities, silky 60fps animations, and real-time cloud synchronizations.</p>
+              <div class="service-tags">
+                <span class="tech-pill">React Native</span>
+                <span class="tech-pill">Flutter</span>
+                <span class="tech-pill">iOS & Android</span>
+                <span class="tech-pill">Firebase</span>
+                <span class="tech-pill">App Store & Play</span>
+              </div>
+            </div>
+
+            <!-- Service 3: Graphic Design & UI/UX -->
+            <div class="service-card">
+              <div class="service-icon-wrap">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="m4.93 4.93 4.24 4.24"/>
+                  <path d="m14.83 9.17 4.24-4.24"/>
+                  <path d="m14.83 14.83 4.24 4.24"/>
+                  <path d="m9.17 14.83-4.24 4.24"/>
+                  <circle cx="12" cy="12" r="4"/>
+                </svg>
+              </div>
+              <h3>Graphic & UI/UX Design</h3>
+              <p>Liquid aesthetics, cohesive brand identities, and research-driven user experiences. Interactive Figma prototypes and comprehensive design tokens.</p>
+              <div class="service-tags">
+                <span class="tech-pill">Figma</span>
+                <span class="tech-pill">Design Systems</span>
+                <span class="tech-pill">Brand Identity</span>
+                <span class="tech-pill">Motion UI</span>
+                <span class="tech-pill">Vector Graphics</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects & Products Showcase -->
+      <section class="section-block" id="projects">
+        <div class="section-container">
+          <div class="section-header">
+            <span class="section-tag">Showcase</span>
+            <h2 class="section-heading">Featured <em>products & client works</em></h2>
+            <p class="section-subtext">A curated selection of digital platforms crafted by the Evoxia engineering and design collective.</p>
+          </div>
+
+          <div class="projects-filter">
+            <button class="filter-btn active" data-filter="all">All Projects</button>
+            <button class="filter-btn" data-filter="web">Web Development</button>
+            <button class="filter-btn" data-filter="mobile">Mobile Apps</button>
+            <button class="filter-btn" data-filter="design">UI/UX & Branding</button>
+          </div>
+
+          <div class="projects-grid">
+            <!-- Project 1: Web Platform -->
+            <div class="project-card" data-category="web">
+              <div class="project-preview">
+                <span class="mockup-badge">Live SaaS</span>
+                <div class="project-preview-mockup">
+                  <div class="mockup-header">
+                    <div class="mockup-dot"></div>
+                    <div class="mockup-dot"></div>
+                    <div class="mockup-dot"></div>
+                  </div>
+                  <div class="mockup-content">
+                    <div class="mockup-bar" style="width: 45%; background: rgba(255,255,255,0.3);"></div>
+                    <div class="mockup-bar" style="width: 75%;"></div>
+                    <div class="mockup-bar" style="width: 60%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-info">
+                <span class="project-category">Web Development & Cloud</span>
+                <h3 class="project-title">Aura Analytics — Enterprise Intelligence</h3>
+                <p class="project-desc">A real-time data visualization dashboard engineered for high-throughput telematics with sub-second querying.</p>
+                <div class="project-footer">
+                  <div class="service-tags">
+                    <span class="tech-pill">Next.js 14</span>
+                    <span class="tech-pill">TypeScript</span>
+                    <span class="tech-pill">Tailwind</span>
+                  </div>
+                  <a href="#contact" class="project-link-btn">
+                    <span>Case Study</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 2: Mobile App -->
+            <div class="project-card" data-category="mobile">
+              <div class="project-preview">
+                <span class="mockup-badge">iOS & Android</span>
+                <div class="project-preview-mockup" style="width: 50%; height: 85%; border-radius: 16px;">
+                  <div class="mockup-header" style="justify-content: center;">
+                    <div class="mockup-dot" style="width: 24px; border-radius: 4px;"></div>
+                  </div>
+                  <div class="mockup-content">
+                    <div class="mockup-bar" style="width: 80%; margin: 0 auto; background: rgba(255,255,255,0.3);"></div>
+                    <div class="mockup-bar" style="width: 65%; margin: 0 auto;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-info">
+                <span class="project-category">Mobile Engineering</span>
+                <h3 class="project-title">Zenith Pulse — Health & Fitness Tracker</h3>
+                <p class="project-desc">Cross-platform biometric tracking mobile application with background Bluetooth sync and personalized AI coaching.</p>
+                <div class="project-footer">
+                  <div class="service-tags">
+                    <span class="tech-pill">React Native</span>
+                    <span class="tech-pill">GraphQL</span>
+                    <span class="tech-pill">HealthKit</span>
+                  </div>
+                  <a href="#contact" class="project-link-btn">
+                    <span>Case Study</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 3: Graphic / UI/UX Design -->
+            <div class="project-card" data-category="design">
+              <div class="project-preview">
+                <span class="mockup-badge">Design System</span>
+                <div class="project-preview-mockup">
+                  <div class="mockup-header">
+                    <div class="mockup-dot"></div>
+                    <div class="mockup-dot"></div>
+                    <div class="mockup-dot"></div>
+                  </div>
+                  <div class="mockup-content" style="flex-direction: row; align-items: center; gap: 12px;">
+                    <div style="width: 32px; height: 32px; border-radius: 6px; background: rgba(255,255,255,0.25);"></div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                      <div class="mockup-bar" style="width: 90%;"></div>
+                      <div class="mockup-bar" style="width: 50%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-info">
+                <span class="project-category">UI/UX & Brand Identity</span>
+                <h3 class="project-title">Kinetix — Fintech Brand Ecosystem</h3>
+                <p class="project-desc">Complete visual overhaul, component library, and frictionless checkout flow design for a modern digital neo-bank.</p>
+                <div class="project-footer">
+                  <div class="service-tags">
+                    <span class="tech-pill">Figma</span>
+                    <span class="tech-pill">Design Tokens</span>
+                    <span class="tech-pill">Prototyping</span>
+                  </div>
+                  <a href="#contact" class="project-link-btn">
+                    <span>Case Study</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 4: Evoxia Core Product -->
+            <div class="project-card" data-category="web">
+              <div class="project-preview">
+                <span class="mockup-badge">Internal Product</span>
+                <div class="project-preview-mockup">
+                  <div class="mockup-header">
+                    <div class="mockup-dot"></div>
+                    <div class="mockup-dot"></div>
+                    <div class="mockup-dot"></div>
+                  </div>
+                  <div class="mockup-content">
+                    <div class="mockup-bar" style="width: 70%; background: linear-gradient(90deg, #fff, rgba(255,255,255,0.2));"></div>
+                    <div class="mockup-bar" style="width: 40%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-info">
+                <span class="project-category">Evoxia Labs</span>
+                <h3 class="project-title">Vortex CMS — Headless Content Engine</h3>
+                <p class="project-desc">Blazing fast headless publishing engine with edge caching and integrated AI copy suggestions.</p>
+                <div class="project-footer">
+                  <div class="service-tags">
+                    <span class="tech-pill">Node.js</span>
+                    <span class="tech-pill">Edge Functions</span>
+                    <span class="tech-pill">Redis</span>
+                  </div>
+                  <a href="#contact" class="project-link-btn">
+                    <span>Preview</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Teaser for Upcoming Products -->
+          <div class="projects-teaser">
+            <div class="teaser-text">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <span><strong>More upcoming company products & client releases</strong> are currently in private staging.</span>
+            </div>
+            <a href="#contact" class="btn btn-ghost" style="height: 38px; font-size: 13px;">Request Access</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Official Team Section -->
+      <section class="section-block" id="team">
+        <div class="section-container">
+          <div class="section-header">
+            <span class="section-tag">Leadership</span>
+            <h2 class="section-heading">The core <em>architects & visionaries</em></h2>
+            <p class="section-subtext">Meet the multidisciplinary team behind Evoxia’s engineering rigor and design precision.</p>
+          </div>
+
+          <div class="team-grid">
+            <!-- Member 1: M. Baqir -->
+            <div class="team-card">
+              <div class="avatar-wrapper">
+                <span class="avatar-initials">MB</span>
+              </div>
+              <span class="member-role-badge">Project Manager</span>
+              <h3 class="member-name">M. Baqir</h3>
+              <p class="member-desc">Oversees agile product roadmaps, cross-functional sprints, client alignment, and high-velocity delivery.</p>
+              <div class="member-skills">
+                <span class="skill-chip">Agile / Scrum</span>
+                <span class="skill-chip">Product Strategy</span>
+                <span class="skill-chip">Operations</span>
+              </div>
+            </div>
+
+            <!-- Member 2: M. Ammar Akhter -->
+            <div class="team-card">
+              <div class="avatar-wrapper">
+                <span class="avatar-initials">MA</span>
+              </div>
+              <span class="member-role-badge">Developer</span>
+              <h3 class="member-name">M. Ammar Akhter</h3>
+              <p class="member-desc">Architects full-stack web and mobile systems, robust API integrations, and cloud infrastructure.</p>
+              <div class="member-skills">
+                <span class="skill-chip">Full-Stack</span>
+                <span class="skill-chip">React / Next.js</span>
+                <span class="skill-chip">Cloud Arch</span>
+              </div>
+            </div>
+
+            <!-- Member 3: M. Ibrahim Khan -->
+            <div class="team-card">
+              <div class="avatar-wrapper">
+                <span class="avatar-initials">MI</span>
+              </div>
+              <span class="member-role-badge">UI/UX Designer</span>
+              <h3 class="member-name">M. Ibrahim Khan</h3>
+              <p class="member-desc">Crafts bespoke design systems, liquid glass interfaces, graphic identities, and fluid user interactions.</p>
+              <div class="member-skills">
+                <span class="skill-chip">UI/UX Design</span>
+                <span class="skill-chip">Figma</span>
+                <span class="skill-chip">Brand Identity</span>
+              </div>
+            </div>
+
+            <!-- Member 4: Hasham Arshad -->
+            <div class="team-card">
+              <div class="avatar-wrapper">
+                <span class="avatar-initials">HA</span>
+              </div>
+              <span class="member-role-badge">QA / Tester</span>
+              <h3 class="member-name">Hasham Arshad</h3>
+              <p class="member-desc">Guarantees bulletproof software quality through comprehensive automated testing and performance benchmarks.</p>
+              <div class="member-skills">
+                <span class="skill-chip">QA Automation</span>
+                <span class="skill-chip">Regression Testing</span>
+                <span class="skill-chip">Security Audit</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Join Our Company (Coming Soon) -->
+          <div class="careers-banner" id="careers">
+            <div class="careers-info">
+              <div class="coming-soon-pill">
+                <span class="coming-soon-dot"></span>
+                <span>Careers — Coming Soon</span>
+              </div>
+              <h3 class="careers-title">Join the Evoxia Collective</h3>
+              <p class="careers-desc">We are actively gearing up for our next phase of hiring across frontend engineering, iOS/Android development, and 3D motion design.</p>
+            </div>
+            <button type="button" class="btn btn-solid" id="notify-careers-btn" style="height: 44px; padding: 0 24px;">
+              <span>Notify Me on Launch</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Socials Section -->
+      <section class="section-block" id="socials">
+        <div class="section-container">
+          <div class="section-header">
+            <span class="section-tag">Community</span>
+            <h2 class="section-heading">Connect with <em>Evoxia online</em></h2>
+            <p class="section-subtext">Follow our latest project drops, open-source experiments, and design breakdowns across social channels.</p>
+          </div>
+
+          <div class="socials-grid">
+            <!-- Instagram -->
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-card">
+              <div class="social-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="social-name">Instagram</h3>
+                <p class="social-handle">@evoxia.studio</p>
+              </div>
+            </a>
+
+            <!-- GitHub -->
+            <a href="https://github.com/ammarakht/evoxia" target="_blank" rel="noopener noreferrer" class="social-card">
+              <div class="social-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="social-name">GitHub</h3>
+                <p class="social-handle">github.com/ammarakht/evoxia</p>
+              </div>
+            </a>
+
+            <!-- LinkedIn -->
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-card">
+              <div class="social-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                  <rect x="2" y="9" width="4" height="12"/>
+                  <circle cx="4" cy="4" r="2"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="social-name">LinkedIn</h3>
+                <p class="social-handle">Evoxia Technologies</p>
+              </div>
+            </a>
+
+            <!-- X / Twitter -->
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-card">
+              <div class="social-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="social-name">X (Twitter)</h3>
+                <p class="social-handle">@EvoxiaStudio</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section class="section-block" id="contact">
+        <div class="section-container">
+          <div class="section-header">
+            <span class="section-tag">Inquiries</span>
+            <h2 class="section-heading">Let's build something <em>extraordinary</em></h2>
+            <p class="section-subtext">Have a project in mind or looking for a trusted development and design partner? Get in touch with our team today.</p>
+          </div>
+
+          <div class="contact-layout">
+            <!-- Left Info -->
+            <div class="contact-card">
+              <div>
+                <h3 style="font-size: 24px; font-weight: 500; color: #fff; margin-bottom: 8px;">Direct Channels</h3>
+                <p style="font-size: 14.5px; color: #9a9a9a;">We typically respond to new project inquiries in under 24 hours.</p>
+              </div>
+
+              <div class="contact-item">
+                <div class="contact-item-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div>
+                  <h4>Email Inquiries</h4>
+                  <a href="mailto:contact@evoxia.studio">contact@evoxia.studio</a>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <div class="contact-item-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div>
+                  <h4>Consultation Line</h4>
+                  <a href="tel:+1234567890">+1 (800) EVOXIA-DEV</a>
+                </div>
+              </div>
+
+              <div class="contact-guarantee">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>NDA & Confidentiality Protected on All Projects</span>
+              </div>
+            </div>
+
+            <!-- Right Form -->
+            <form class="contact-form" id="evoxia-contact-form">
+              <div class="form-group">
+                <label class="form-label" for="client-name">Your Name</label>
+                <input type="text" id="client-name" class="form-input" placeholder="e.g. Alex Morgan" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="client-email">Email Address</label>
+                <input type="email" id="client-email" class="form-input" placeholder="alex@company.com" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="client-service">Primary Service</label>
+                <select id="client-service" class="form-select">
+                  <option value="web">Web Application Development</option>
+                  <option value="mobile">Mobile Application (iOS / Android)</option>
+                  <option value="design">Graphic Design & UI/UX</option>
+                  <option value="full">Full-Stack All-Inclusive Solution</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="client-message">Project Overview</label>
+                <textarea id="client-message" class="form-textarea" placeholder="Describe your project vision, timeline, and goals..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-solid form-submit-btn" id="submit-btn">
+                <span>Send Project Request</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <!-- Stats Footer -->
-    <footer class="stats">
-      <div class="stat appear appear--stat" style="--d: 1.12s;">
-        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="pillGrad1" x1="3" y1="2" x2="14" y2="22" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.38"/>
-              <stop offset="100%" stop-color="#3a3a3a" stop-opacity="0.62"/>
-            </linearGradient>
-            <linearGradient id="pillGrad2" x1="13" y1="2" x2="24" y2="22" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#3a3a3a" stop-opacity="0.38"/>
-              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.62"/>
-            </linearGradient>
-          </defs>
-          <rect x="3.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#pillGrad1)"/>
-          <rect x="13.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#pillGrad2)"/>
-          <rect x="9.2" y="10.9" width="5.6" height="2.2" rx="1.1" fill="#4a4a4a"/>
-        </svg>
-        <span>4.2M+ workflows automated</span>
-      </div>
+    <!-- Site Footer -->
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          <div class="logo">
+            <svg class="logo-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <g transform="rotate(-30 12 12)">
+                <circle cx="7.3" cy="3.2" r="1.45"/>
+                <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+                <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+                <circle cx="16.7" cy="20.8" r="1.45"/>
+              </g>
+            </svg>
+            <span>Evoxia<span class="logo-suffix">.studio</span></span>
+          </div>
+          <p class="footer-copy">© 2026 Evoxia Technologies. All rights reserved.</p>
+        </div>
 
-      <div class="stat appear appear--stat" style="--d: 1.28s;">
-        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="2.4" y="2.4" width="19.2" height="19.2" rx="6.2" fill="#ffffff"/>
-          <path d="M12 7.1v7.4" stroke="#111111" stroke-width="1.85" stroke-linecap="round"/>
-          <path d="M8.15 12.35L12 16.2l3.85-3.85" stroke="#111111" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>92% reduction in manual operations</span>
-      </div>
-
-      <div class="stat appear appear--stat" style="--d: 1.44s;">
-        <svg class="stat-icon-wide" viewBox="0 0 40 22" fill="none" aria-hidden="true">
-          <circle cx="10.2" cy="11" r="9.2" fill="#2b2b2b"/>
-          <polygon points="5.5,5.5 8,3 9.5,6" fill="#2b2b2b"/>
-          <polygon points="14.9,5.5 12.4,3 10.9,6" fill="#2b2b2b"/>
-          <ellipse cx="10.2" cy="12.1" rx="4.15" ry="3.7" fill="#f4f4f4"/>
-          <circle cx="8.9" cy="11.5" r="0.7" fill="#1a1a1a"/>
-          <circle cx="11.5" cy="11.5" r="0.7" fill="#1a1a1a"/>
-          <circle cx="20.2" cy="11" r="9.2" fill="#ffffff"/>
-          <circle cx="17.2" cy="9.8" r="1.7" fill="#111111"/>
-          <circle cx="23.2" cy="9.8" r="1.7" fill="#111111"/>
-          <ellipse cx="20.2" cy="12.2" rx="1.2" ry="0.8" fill="#111111"/>
-          <path d="M17.8 13.8c1.3 1.2 3.5 1.2 4.8 0" stroke="#111111" stroke-width="1.2" stroke-linecap="round"/>
-          <circle cx="30.2" cy="11" r="9.2" fill="#f26b1d"/>
-          <text x="30.2" y="15.1" font-family="'Inter', sans-serif" font-weight="700" font-size="12.5" fill="#ffffff" text-anchor="middle">e</text>
-        </svg>
-        <span>180+ operational teams onboarded</span>
+        <div class="footer-status">
+          <span class="status-bulb"></span>
+          <span>All Systems Operational • Accepting New Projects</span>
+        </div>
       </div>
     </footer>
   </div>
 
+  <!-- Interactive Toast Notification -->
+  <div class="toast-notification" id="site-toast">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <span id="toast-message">Message sent successfully! We will get back to you shortly.</span>
+  </div>
+
   <!-- ========================================================
-       CINEMATIC THREE.JS ROBOT SCRIPT + WEBSITE JS
+       CINEMATIC THREE.JS ROBOT PIPELINE SCRIPT + WEBSITE CONTROLS
        ======================================================== -->
   <script>
     (function () {
@@ -1443,7 +2593,7 @@
           }, 850);
         }
 
-        initEntranceAnimations();
+        triggerSiteEntrance();
       }
 
       if (skipBtn) {
@@ -1456,43 +2606,16 @@
         initThreeScene();
       }
 
-      // ========================================================
-      // 2. WEBSITE ENTRANCE MOTION & MOBILE MENU LOGIC
-      // ========================================================
-      function initEntranceAnimations() {
+      function triggerSiteEntrance() {
         const appears = document.querySelectorAll('.appear');
-        const heroPhoto = document.querySelector('.hero-photo');
-
-        appears.forEach(el => {
-          el.addEventListener('animationend', () => {
-            el.classList.add('is-in');
-          }, { once: true });
-        });
-
-        if (heroPhoto) {
-          heroPhoto.addEventListener('animationend', () => {
-            heroPhoto.classList.add('is-in');
-          }, { once: true });
-        }
-
-        // Dual-rAF animation fallback
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            let running = false;
-            appears.forEach(el => {
-              if (el.getAnimations && el.getAnimations().some(a => a.playState === 'running' || a.playState === 'finished')) {
-                running = true;
-              }
-            });
-            if (!running) {
-              appears.forEach(el => el.classList.add('is-in'));
-              if (heroPhoto) heroPhoto.classList.add('is-in');
-            }
-          });
-        });
+        appears.forEach(el => el.classList.add('is-in'));
       }
 
-      // Mobile Burger Menu
+      // ========================================================
+      // 2. EVOXIA WEBSITE INTERACTION CONTROLLER
+      // ========================================================
+
+      // Mobile Menu
       const burger = document.querySelector('.burger');
       const backdrop = document.getElementById('menu-backdrop');
       const navLinks = document.querySelectorAll('#site-nav a');
@@ -1548,6 +2671,81 @@
         mql.addEventListener('change', handleBreakpoint);
       } else if (mql.addListener) {
         mql.addListener(handleBreakpoint);
+      }
+
+      // Sticky Header on Scroll
+      const header = document.getElementById('main-header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 40) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      }, { passive: true });
+
+      // Toast System
+      const toast = document.getElementById('site-toast');
+      const toastMessage = document.getElementById('toast-message');
+      let toastTimeout = null;
+
+      function showToast(msg) {
+        if (toastMessage) toastMessage.textContent = msg;
+        if (toast) {
+          toast.classList.add('show');
+          clearTimeout(toastTimeout);
+          toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+          }, 4500);
+        }
+      }
+
+      // Careers "Notify Me" Action
+      const notifyCareersBtn = document.getElementById('notify-careers-btn');
+      if (notifyCareersBtn) {
+        notifyCareersBtn.addEventListener('click', () => {
+          showToast('You are on the priority waitlist! We will notify you when positions open.');
+        });
+      }
+
+      // Projects Filter
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const projectCards = document.querySelectorAll('.project-card');
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const filterValue = btn.getAttribute('data-filter');
+          projectCards.forEach(card => {
+            const cardCat = card.getAttribute('data-category');
+            if (filterValue === 'all' || cardCat === filterValue) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // Contact Form Transmission Simulation
+      const contactForm = document.getElementById('evoxia-contact-form');
+      if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const submitBtn = document.getElementById('submit-btn');
+          const originalText = submitBtn.innerHTML;
+
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span>Transmitting...</span>';
+
+          setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+            contactForm.reset();
+            showToast('Project request transmitted! An Evoxia lead engineer will reach out within 24 hours.');
+          }, 800);
+        });
       }
     })();
   </script>
