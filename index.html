@@ -2287,10 +2287,9 @@
       const skipBtn = document.getElementById('intro-skip-btn');
 
       let isIntroFinished = false;
-      let scene, camera, renderer, clock, mixer;
-      let robotModel = null;
-      let walkAction = null;
-      let rightArmBone, rightForeArmBone, rightHandBone, rightFingerBone;
+      let scene, camera, renderer, clock;
+      // 4 robots — each is { model, mixer, walkAction, startPos, targetPos, angle }
+      let robots = [];
       let warpParticles = null;
       let contactPointLight = null;
       let shockwaveMesh = null;
@@ -2299,12 +2298,24 @@
       const startTime = performance.now();
 
       const T_WALK_START = 1200;
-      const T_WALK_END   = 5500;
-      const T_ARM_RAISE  = 7200;
+      const T_WALK_END   = 5800;
       const T_CONTACT    = 8500;
       const T_WARP_START = 9200;
       const T_FLASH      = 11200;
       const T_REVEAL     = 12000;
+
+      // 4 starting positions (x, z) and angle (Y rotation in radians) so each robot faces the center
+      // They all converge toward the center: (0, 0, -1.5)
+      const ROBOT_CONFIGS = [
+        // From far front-left diagonal
+        { startX: -9,  startZ: -12, targetX: -0.6, targetZ: -1.6, angle: Math.PI * 0.18 },
+        // From far front-right diagonal
+        { startX:  9,  startZ: -12, targetX:  0.6, targetZ: -1.6, angle: -Math.PI * 0.18 },
+        // From far side-left
+        { startX: -14, startZ: -6,  targetX: -1.1, targetZ: -1.4, angle: Math.PI * 0.38 },
+        // From far side-right
+        { startX:  14, startZ: -6,  targetX:  1.1, targetZ: -1.4, angle: -Math.PI * 0.38 },
+      ];
 
       function initThreeScene() {
         if (!canvas || !window.THREE) return;
@@ -2437,38 +2448,52 @@
       function loadRobotModel() {
         const loader = new THREE.GLTFLoader();
         loader.load('robot.glb', function (gltf) {
-          robotModel = gltf.scene;
-          robotModel.position.set(0, 0, -14);
-          robotModel.scale.set(1.05, 1.05, 1.05);
+          // Spawn 4 robots by cloning the loaded scene for each
+          for (let i = 0; i < ROBOT_CONFIGS.length; i++) {
+            const cfg = ROBOT_CONFIGS[i];
 
-          robotModel.traverse(function (child) {
-            if (child.isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
-              if (child.material) {
-                child.material.color = new THREE.Color(0xd8d8d8);
-                child.material.metalness = 0.96;
-                child.material.roughness = 0.16;
-                child.material.envMapIntensity = 2.2;
+            // Clone the scene graph (each clone is independent)
+            const modelClone = gltf.scene.clone(true);
+            modelClone.scale.set(1.0, 1.0, 1.0);
+            modelClone.position.set(cfg.startX, 0, cfg.startZ);
+            modelClone.rotation.y = cfg.angle;
+
+            // Apply materials and shadows to this clone
+            modelClone.traverse(function (child) {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                if (child.material) {
+                  // Clone materials so each robot can have independent state
+                  child.material = child.material.clone();
+                  child.material.color = new THREE.Color(0xd8d8d8);
+                  child.material.metalness = 0.96;
+                  child.material.roughness = 0.16;
+                  child.material.envMapIntensity = 2.2;
+                }
               }
-            }
-            if (child.isBone) {
-              const name = child.name.toLowerCase();
-              if (name.includes('rightarm') && !name.includes('fore')) rightArmBone = child;
-              if (name.includes('rightforearm')) rightForeArmBone = child;
-              if (name.includes('righthand') && !name.includes('index')) rightHandBone = child;
-              if (name.includes('righthandindex')) rightFingerBone = child;
-            }
-          });
+            });
 
-          mixer = new THREE.AnimationMixer(robotModel);
-          const walkClip = gltf.animations.find(a => a.name.toLowerCase().includes('walk')) || gltf.animations[0];
-          if (walkClip) {
-            walkAction = mixer.clipAction(walkClip);
-            walkAction.play();
+            // AnimationMixer needs the original skeleton bones — bind to this clone
+            const mixer = new THREE.AnimationMixer(modelClone);
+            const walkClip = gltf.animations.find(a => a.name.toLowerCase().includes('walk')) || gltf.animations[0];
+            let walkAction = null;
+            if (walkClip) {
+              // Offset the animation phase so they don't step in sync
+              walkAction = mixer.clipAction(walkClip);
+              walkAction.time = i * (walkClip.duration / ROBOT_CONFIGS.length); // stagger phase
+              walkAction.play();
+            }
+
+            scene.add(modelClone);
+
+            robots.push({
+              model: modelClone,
+              mixer: mixer,
+              walkAction: walkAction,
+              cfg: cfg,
+            });
           }
-
-          scene.add(robotModel);
         }, undefined, function (error) {
           console.warn('Local GLB load note:', error);
         });
@@ -2488,34 +2513,38 @@
         const now = performance.now();
         const elapsed = now - startTime;
 
-        if (mixer) mixer.update(delta);
+        // Update all 4 robot mixers
+        for (let i = 0; i < robots.length; i++) {
+          robots[i].mixer.update(delta);
+        }
 
-        // Sequence Phase 1: Robot Walks Forward from Depth (1.2s – 5.5s)
-        if (robotModel) {
+        // Sequence Phase 1: All 4 Robots Walk From Their Directions (1.2s – 5.8s)
+        for (let i = 0; i < robots.length; i++) {
+          const rob = robots[i];
+          const { model, walkAction, cfg } = rob;
+
           if (elapsed < T_WALK_START) {
-            robotModel.position.z = -14;
+            model.position.x = cfg.startX;
+            model.position.z = cfg.startZ;
           } else if (elapsed >= T_WALK_START && elapsed < T_WALK_END) {
+            // Smooth ease-in-out (smoothstep)
             const walkProgress = (elapsed - T_WALK_START) / (T_WALK_END - T_WALK_START);
             const easeWalk = walkProgress * walkProgress * (3 - 2 * walkProgress);
-            robotModel.position.z = -14 + easeWalk * 11.8;
-          } else if (elapsed >= T_WALK_END && elapsed < T_CONTACT) {
-            robotModel.position.z = -2.2;
-            if (walkAction && walkAction.weight > 0.05) {
-              walkAction.weight = THREE.MathUtils.lerp(walkAction.weight, 0, 0.08);
-            }
-          }
+            // Interpolate X and Z from start to target
+            model.position.x = cfg.startX + easeWalk * (cfg.targetX - cfg.startX);
+            model.position.z = cfg.startZ + easeWalk * (cfg.targetZ - cfg.startZ);
 
-          // Sequence Phase 2: Arm Raise, Wrist Rotate & Finger Point (5.5s – 8.5s)
-          if (elapsed >= T_WALK_END && elapsed < T_CONTACT) {
-            if (rightArmBone) {
-              rightArmBone.rotation.x = THREE.MathUtils.lerp(rightArmBone.rotation.x, -1.2, 0.06);
-              rightArmBone.rotation.z = THREE.MathUtils.lerp(rightArmBone.rotation.z, 0.35, 0.06);
-            }
-            if (rightForeArmBone) {
-              rightForeArmBone.rotation.x = THREE.MathUtils.lerp(rightForeArmBone.rotation.x, -0.4, 0.06);
-            }
-            if (rightHandBone) {
-              rightHandBone.rotation.y = THREE.MathUtils.lerp(rightHandBone.rotation.y, 0.5, 0.06);
+            // Dynamically face the direction of travel
+            const dx = cfg.targetX - cfg.startX;
+            const dz = cfg.targetZ - cfg.startZ;
+            model.rotation.y = Math.atan2(dx, dz);
+          } else if (elapsed >= T_WALK_END && elapsed < T_CONTACT) {
+            // Arrived — hold position
+            model.position.x = cfg.targetX;
+            model.position.z = cfg.targetZ;
+            // Slowly fade walk animation to idle
+            if (walkAction && walkAction.weight > 0.05) {
+              walkAction.weight = THREE.MathUtils.lerp(walkAction.weight, 0, 0.05);
             }
           }
         }
