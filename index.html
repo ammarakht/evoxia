@@ -2310,13 +2310,14 @@
 
       const T_WALK_START = 1200;
       const T_WALK_END   = 5500;  // robots arrive at screen
-      const T_ARM_RAISE  = 5700;  // arms start extending
-      const T_ARM_DONE   = 7500;  // arms fully extended
-      const T_TEXT_IN    = 7800;  // Evoxia text starts appearing
-      const T_CONTACT    = 9000;  // contact / spark
-      const T_WARP_START = 9500;
-      const T_FLASH      = 11200;
-      const T_REVEAL     = 12000;
+      const T_STAND      = 5700;  // walk fades, arms settle to sides
+      const T_ARM_RAISE  = 7000;  // right hand reaches toward screen
+      const T_ARM_DONE   = 8500;  // hand fully extended
+      const T_TEXT_IN    = 8600;  // Evoxia text starts appearing
+      const T_CONTACT    = 9200;  // contact / spark
+      const T_WARP_START = 9700;
+      const T_FLASH      = 11400;
+      const T_REVEAL     = 12200;
 
       // All 4 robots face the camera (walk straight forward from depth)
       // Spread horizontally: far-left, center-left, center-right, far-right
@@ -2475,7 +2476,8 @@
               model.rotation.y = 0;
 
               // Per-robot bone references
-              let armBone = null, foreArmBone = null, handBone = null, rob_shoulderBone = null;
+              let armBone = null, foreArmBone = null, handBone = null;
+              let rob_leftArm = null, rob_leftForeArm = null, rob_spine = null;
 
               model.traverse(function (child) {
                 if (child.isMesh) {
@@ -2491,13 +2493,15 @@
                 }
                 if (child.isBone) {
                   const name = child.name;
-                  // Exact Mixamo bone names for right arm
-                  if (name === 'mixamorigRightShoulder') armBone = child;
-                  if (name === 'mixamorigRightArm')      armBone = armBone || child;
-                  if (name === 'mixamorigRightForeArm')  foreArmBone = child;
-                  if (name === 'mixamorigRightHand')     handBone = child;
-                  // Also grab shoulder bone separately
-                  if (name === 'mixamorigRightShoulder') rob_shoulderBone = child;
+                  // Right arm (will reach toward screen)
+                  if (name === 'mixamorigRightArm')     armBone = child;
+                  if (name === 'mixamorigRightForeArm') foreArmBone = child;
+                  if (name === 'mixamorigRightHand')    handBone = child;
+                  // Left arm (will be held naturally at side)
+                  if (name === 'mixamorigLeftArm')      rob_leftArm = child;
+                  if (name === 'mixamorigLeftForeArm')  rob_leftForeArm = child;
+                  // Spine for slight forward lean
+                  if (name === 'mixamorigSpine')        rob_spine = child;
                 }
               });
 
@@ -2525,12 +2529,14 @@
                 mixer: mixer,
                 walkAction: walkAction,
                 cfg: cfg,
+                // Right arm — reaches toward screen
                 armBone: armBone,
                 foreArmBone: foreArmBone,
                 handBone: handBone,
-                shoulderBone: rob_shoulderBone,
-                armRaised: false,
-                walkStopped: false,
+                // Left arm — parked naturally
+                leftArmBone: rob_leftArm,
+                leftForeArmBone: rob_leftForeArm,
+                spineBone: rob_spine,
               });
 
               loadedCount++;
@@ -2590,40 +2596,41 @@
           }
         }
 
-        // ── PHASE 2: ONE Arm Extends Toward Screen per Robot (5.7s – 7.5s) ──
-        // Mixamo rig, robot facing camera (rotation.y = 0).
-        // Right arm forward toward camera: positive X rotation on mixamorigRightArm lifts arm up/forward.
+        // ── PHASE 2: Walk fades out → Robots STAND naturally (5.5s – 7.0s) ──
+        if (elapsed >= T_WALK_END) {
+          // Fade walk weight toward a very low value (not 0 — hitting 0 snaps to T-pose bind)
+          const standProgress = Math.min(1, (elapsed - T_WALK_END) / (T_ARM_RAISE - T_WALK_END));
+          const targetWeight = THREE.MathUtils.lerp(1, 0.05, standProgress);
+          for (let i = 0; i < robots.length; i++) {
+            const { walkAction } = robots[i];
+            if (walkAction) {
+              walkAction.weight = targetWeight;
+            }
+          }
+        }
+
+        // ── PHASE 3: ONE hand reaches toward screen (7.0s – 8.5s) ──
+        // Robots are now standing. Only the right forearm extends forward.
+        // Mixamo rig facing camera (rotation.y=0):
+        //   ForeArm rotation.x NEGATIVE → swings forearm forward toward camera
         if (elapsed >= T_ARM_RAISE) {
           const armProgress = Math.min(1, Math.max(0, (elapsed - T_ARM_RAISE) / (T_ARM_DONE - T_ARM_RAISE)));
           const armEase = armProgress * armProgress * (3 - 2 * armProgress); // smoothstep
 
           for (let i = 0; i < robots.length; i++) {
-            const rob = robots[i];
-            const { armBone, foreArmBone, handBone, shoulderBone, walkAction, mixer } = rob;
-
-            // Stop walk clip completely so it doesn't fight bone rotations
-            if (!rob.walkStopped && elapsed >= T_ARM_RAISE + 100) {
-              if (walkAction) {
-                // Freeze mid-walk (don't stop — stop() resets to T-pose bind)
-                walkAction.paused = true;
-              }
-              rob.walkStopped = true;
-            }
-
-            // ── ARM POSE: lerp arm bones AFTER mixer.update() ──
-            // Walk is frozen; mixer.update(0) runs but doesn't advance time.
-            // Our bone lerps here override only the right arm from its frozen walk pose.
-            // Mixamo rig, rotation.y=0: right arm bind = sideways (+X).
-            // To swing arm FORWARD toward camera: rotate Y negative (−Y swings +X arm to −Z world).
-            if (armBone) {
-              armBone.rotation.y = THREE.MathUtils.lerp(armBone.rotation.y, -armEase * 1.4, 0.08);
-              armBone.rotation.z = THREE.MathUtils.lerp(armBone.rotation.z, -armEase * 0.15, 0.08);
-            }
+            const { foreArmBone, handBone } = robots[i];
+            // Only move the FOREARM forward — upper arm stays at side
+            // Negative X rotation on forearm swings it toward +Z (toward camera)
             if (foreArmBone) {
-              foreArmBone.rotation.y = THREE.MathUtils.lerp(foreArmBone.rotation.y, armEase * 0.2, 0.08);
+              foreArmBone.rotation.x = THREE.MathUtils.lerp(
+                foreArmBone.rotation.x, -armEase * 1.1, 0.07
+              );
             }
+            // Wrist tilts slightly upward (hand faces screen)
             if (handBone) {
-              handBone.rotation.x = THREE.MathUtils.lerp(handBone.rotation.x, armEase * -0.2, 0.08);
+              handBone.rotation.x = THREE.MathUtils.lerp(
+                handBone.rotation.x, armEase * 0.3, 0.07
+              );
             }
           }
         }
