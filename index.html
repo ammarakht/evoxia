@@ -13,6 +13,8 @@
   <!-- Three.js and GLTFLoader for Cinematic 3D Robot Intro Experience -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
 
   <style>
     /* Immediate black background rule */
@@ -569,59 +571,6 @@
 
     #hero-bg-canvas.hero-canvas-visible {
       opacity: 1;
-    }
-
-    /* Brand name overlay on robot screen */
-    .hero-brand-overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 3;
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      pointer-events: none;
-      opacity: 0;
-      animation: brand-fade-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
-    }
-
-    @keyframes brand-fade-in {
-      from { opacity: 0; transform: translate(-50%, calc(-50% + 16px)); }
-      to   { opacity: 1; transform: translate(-50%, -50%); }
-    }
-
-    .hero-brand-mark {
-      width: 52px;
-      height: 52px;
-      opacity: 0.85;
-      flex-shrink: 0;
-    }
-
-    .hero-brand-text {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .hero-brand-name {
-      font-family: "Inter", system-ui, sans-serif;
-      font-size: clamp(52px, 7vw, 96px);
-      font-weight: 600;
-      letter-spacing: -0.055em;
-      line-height: 1;
-      color: #ffffff;
-      white-space: nowrap;
-    }
-
-    .hero-brand-studio {
-      font-family: "Inter", system-ui, sans-serif;
-      font-size: clamp(12px, 1.1vw, 16px);
-      font-weight: 400;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.38);
-      padding-left: 3px;
     }
 
     /* Scroll cue arrow at bottom of robot screen */
@@ -1819,24 +1768,8 @@
     <!-- Hero Section — robot only, pure cinematic first screen -->
     <main>
       <section class="hero" id="top">
-        <!-- Persistent 3D robot background -->
+        <!-- Persistent 3D robot background with 3D text -->
         <canvas id="hero-bg-canvas" aria-hidden="true"></canvas>
-
-        <!-- Company name centered, side by side with robot -->
-        <div class="hero-brand-overlay" aria-label="Evoxia Studio">
-          <svg class="hero-brand-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <g transform="rotate(-30 12 12)">
-              <circle cx="7.3" cy="3.2" r="1.45"/>
-              <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8"/>
-              <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8"/>
-              <circle cx="16.7" cy="20.8" r="1.45"/>
-            </g>
-          </svg>
-          <div class="hero-brand-text">
-            <span class="hero-brand-name">Evoxia</span>
-            <span class="hero-brand-studio">Digital Studio</span>
-          </div>
-        </div>
 
         <!-- Subtle scroll prompt at bottom -->
         <div class="hero-scroll-cue" aria-hidden="true">
@@ -2895,9 +2828,9 @@
         const hScene    = new THREE.Scene();
         hScene.fog      = new THREE.FogExp2(0x000000, 0.045);
 
-        const hCamera   = new THREE.PerspectiveCamera(55, heroCanvas.width / heroCanvas.height, 0.1, 200);
-        hCamera.position.set(-0.6, 1.4, 5.2);
-        hCamera.lookAt(1.2, 1.0, 0);
+        const hCamera   = new THREE.PerspectiveCamera(60, heroCanvas.width / heroCanvas.height, 0.1, 200);
+        hCamera.position.set(0, 1.4, 6.5);
+        hCamera.lookAt(0.3, 1.0, 0);
 
         const hRenderer = new THREE.WebGLRenderer({ canvas: heroCanvas, antialias: true, alpha: true });
         hRenderer.setSize(heroCanvas.width, heroCanvas.height);
@@ -2935,53 +2868,114 @@
         let hRafId = null;
         let hClock  = new THREE.Clock();
         let heroVisible = true;
-        let hAngle = 0; // slow Y-rotation offset for atmosphere
+        let hAngle = 0;
+        let hTextMesh = null;
+        let hRobotModel = null;
+        let hArmBone = null, hForeArmBone = null, hHandBone = null;
+        let armPoseProgress = 0; // 0→1 as arm extends toward text
 
-        // Load single robot for hero background
-        const hLoader = new THREE.GLTFLoader();
-        hLoader.load('robot.glb', function(gltf) {
-          const hModel = gltf.scene;
-          hModel.scale.set(1.05, 1.05, 1.05);
-          // Positioned clearly to the RIGHT — leaves left half for the brand name
-          hModel.position.set(2.8, 0, 0);
-          hModel.rotation.y = -0.35; // slight 3/4 angle toward center
-
-          hModel.traverse(function(child) {
-            if (child.isMesh && child.material) {
-              child.material = child.material.clone();
-              child.material.color          = new THREE.Color(0xd0d0d0);
-              child.material.metalness      = 0.97;
-              child.material.roughness      = 0.12;
-              child.material.envMapIntensity = 2.0;
-            }
-          });
-
-          hScene.add(hModel);
-
-          // Play walk animation at very slow speed for atmospheric idle
-          hMixer = new THREE.AnimationMixer(hModel);
-          const clip = gltf.animations[0];
-          if (clip) {
-            const action = hMixer.clipAction(clip);
-            action.timeScale = 0.35; // very slow — looks like a breathing idle
-            action.play();
-          }
-
-          // Fade in the hero canvas
-          heroCanvas.classList.add('hero-canvas-visible');
-
-          // Render loop
-          (function hRender() {
-            if (!heroVisible) { hRafId = requestAnimationFrame(hRender); return; }
-            const dt = hClock.getDelta();
-            if (hMixer) hMixer.update(dt);
-            // Gentle ambient Y oscillation — robot breathes/sways very slightly
-            hAngle += dt * 0.08;
-            hModel.rotation.y = -0.25 + Math.sin(hAngle) * 0.06;
-            hRenderer.render(hScene, hCamera);
-            hRafId = requestAnimationFrame(hRender);
-          })();
+        // Chrome material — shared between text and robot
+        const chromeMat = new THREE.MeshStandardMaterial({
+          color:           new THREE.Color(0xd8d8d8),
+          metalness:       0.98,
+          roughness:       0.09,
+          envMapIntensity: 2.2,
         });
+
+        // ── Step 1: Load 3D font, then create EVOXIA text ──
+        const fontLoader = new THREE.FontLoader();
+        fontLoader.load(
+          'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_bold.typeface.json',
+          function(font) {
+            const textGeo = new THREE.TextGeometry('EVOXIA', {
+              font:           font,
+              size:           0.68,
+              height:         0.22,      // extrusion depth — real 3D object
+              curveSegments:  12,
+              bevelEnabled:   true,
+              bevelThickness: 0.025,
+              bevelSize:      0.018,
+              bevelSegments:  6,
+            });
+
+            textGeo.computeBoundingBox();
+            const textWidth = textGeo.boundingBox.max.x - textGeo.boundingBox.min.x;
+            const textHeight = textGeo.boundingBox.max.y - textGeo.boundingBox.min.y;
+
+            hTextMesh = new THREE.Mesh(textGeo, chromeMat.clone());
+            // Center the text horizontally and vertically, placed LEFT of center
+            hTextMesh.position.set(-textWidth / 2 - 1.2, 1.2 - textHeight / 2, 0);
+            hScene.add(hTextMesh);
+
+            // ── Step 2: Load robot ──
+            const hLoader = new THREE.GLTFLoader();
+            hLoader.load('robot.glb', function(gltf) {
+              hRobotModel = gltf.scene;
+              hRobotModel.scale.set(1.05, 1.05, 1.05);
+              // Robot stands to the RIGHT, facing the text (rotated toward left = positive Y)
+              hRobotModel.position.set(1.9, 0, 0.4);
+              hRobotModel.rotation.y = 0.55; // faces LEFT toward the text
+
+              hRobotModel.traverse(function(child) {
+                if (child.isMesh && child.material) {
+                  child.material = chromeMat.clone();
+                }
+                if (child.isBone) {
+                  // Capture right arm (from robot's perspective, points toward text on left)
+                  if (child.name === 'mixamorigRightArm')    hArmBone = child;
+                  if (child.name === 'mixamorigRightForeArm') hForeArmBone = child;
+                  if (child.name === 'mixamorigRightHand')   hHandBone = child;
+                }
+              });
+
+              hScene.add(hRobotModel);
+
+              // Play walk animation VERY slowly for subtle idle breathing
+              hMixer = new THREE.AnimationMixer(hRobotModel);
+              const clip = gltf.animations[0];
+              if (clip) {
+                const action = hMixer.clipAction(clip);
+                action.timeScale = 0.28;
+                action.play();
+              }
+
+              // Fade in the hero canvas
+              heroCanvas.classList.add('hero-canvas-visible');
+
+              // ── Render loop ──
+              (function hRender() {
+                hRafId = requestAnimationFrame(hRender);
+                if (!heroVisible) return;
+                const dt = hClock.getDelta();
+                if (hMixer) hMixer.update(dt);
+
+                // Slowly extend robot's right arm toward the text
+                armPoseProgress = Math.min(1, armPoseProgress + dt * 0.4);
+                const armEase = armPoseProgress * armPoseProgress * (3 - 2 * armPoseProgress);
+                if (hArmBone) {
+                  // Robot faces left (rotation.y ≈ +0.55), so its RIGHT arm reaches left = toward text
+                  hArmBone.rotation.x = THREE.MathUtils.lerp(hArmBone.rotation.x, armEase * -0.9, 0.05);
+                  hArmBone.rotation.z = THREE.MathUtils.lerp(hArmBone.rotation.z,  armEase *  0.3, 0.05);
+                }
+                if (hForeArmBone) {
+                  hForeArmBone.rotation.x = THREE.MathUtils.lerp(hForeArmBone.rotation.x, armEase * -0.2, 0.05);
+                }
+                if (hHandBone) {
+                  hHandBone.rotation.x = THREE.MathUtils.lerp(hHandBone.rotation.x, armEase * 0.15, 0.05);
+                }
+
+                // Text gentle float animation
+                hAngle += dt * 0.5;
+                if (hTextMesh) {
+                  hTextMesh.position.y = (1.2 - 0.34) + Math.sin(hAngle) * 0.04;
+                  hTextMesh.rotation.y = Math.sin(hAngle * 0.4) * 0.025; // very subtle turn
+                }
+
+                hRenderer.render(hScene, hCamera);
+              })();
+            });
+          }
+        );
 
         // Pause rendering when hero is out of viewport
         const observer = new IntersectionObserver(function(entries) {
