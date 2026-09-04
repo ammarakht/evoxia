@@ -542,14 +542,15 @@
       transform-origin: center;
     }
 
-    /* Hero Section */
+    /* Hero Section — robot only, first full viewport */
     section.hero {
-      min-height: 100vh;
+      height: 100vh;
+      min-height: 600px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       align-items: center;
-      padding: 120px 24px 48px;
+      padding: 0 0 48px;
       position: relative;
       overflow: hidden;
     }
@@ -568,6 +569,62 @@
 
     #hero-bg-canvas.hero-canvas-visible {
       opacity: 1;
+    }
+
+    /* Scroll cue arrow at bottom of robot screen */
+    .hero-scroll-cue {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: scroll-cue-in 1s ease 1.5s forwards;
+    }
+
+    @keyframes scroll-cue-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-scroll-cue span {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      font-weight: 500;
+    }
+
+    .hero-scroll-cue svg {
+      animation: bounce-down 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce-down {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(6px); }
+    }
+
+    /* Hero Content section — second viewport screen */
+    section.hero-content {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 100px 24px 64px;
+      position: relative;
+      background: #000000;
+    }
+
+    section.hero-content::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+      pointer-events: none;
+      z-index: 1;
     }
 
     .hero-copy {
@@ -1706,17 +1763,29 @@
       </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Section — robot only, pure cinematic first screen -->
     <main>
       <section class="hero" id="top">
         <!-- Persistent 3D robot background -->
         <canvas id="hero-bg-canvas" aria-hidden="true"></canvas>
+
+        <!-- Subtle scroll prompt at bottom -->
+        <div class="hero-scroll-cue" aria-hidden="true">
+          <span>Scroll</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- Hero Content — scrolls in on second screen -->
+      <section class="hero-content">
         <div class="hero-copy">
           <div class="badge appear appear--pop" style="--d: 0.22s;">
             <svg class="badge-star" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true">
               <path d="M12 2.6C12.55 2.6 12.88 3.15 13.08 4.7c.62 4.7 1.52 5.6 6.22 6.22 1.55.2 2.1.53 2.1 1.08s-.55.88-2.1 1.08c-4.7.62-5.6 1.52-6.22 6.22-.2 1.55-.53 2.1-1.08 2.1s-.88-.55-1.08-2.1c-.62-4.7-1.52-5.6-6.22-6.22C3.15 12.88 2.6 12.55 2.6 12s.55-.88 2.1-1.08c4.7-.62 5.6-1.52 6.22-6.22C11.12 3.15 11.45 2.6 12 2.6Z"/>
             </svg>
-            <span>Digital Engineering & Design Studio</span>
+            <span>Digital Engineering &amp; Design Studio</span>
           </div>
 
           <h1 class="hero-title">
@@ -1755,7 +1824,7 @@
               <rect x="13.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#pillGrad2)"/>
               <rect x="9.2" y="10.9" width="5.6" height="2.2" rx="1.1" fill="#4a4a4a"/>
             </svg>
-            <span>Full-Cycle Web & Mobile Engineering</span>
+            <span>Full-Cycle Web &amp; Mobile Engineering</span>
           </div>
 
           <div class="stat-item">
@@ -1783,7 +1852,7 @@
               <circle cx="30.2" cy="11" r="9.2" fill="#f26b1d"/>
               <text x="30.2" y="15.1" font-family="'Inter', sans-serif" font-weight="700" font-size="12.5" fill="#ffffff" text-anchor="middle">e</text>
             </svg>
-            <span>4 Core Specialists & Dedicated QA</span>
+            <span>4 Core Specialists &amp; Dedicated QA</span>
           </div>
         </div>
       </section>
