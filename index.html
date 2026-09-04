@@ -551,6 +551,23 @@
       align-items: center;
       padding: 120px 24px 48px;
       position: relative;
+      overflow: hidden;
+    }
+
+    /* Hero 3D background canvas */
+    #hero-bg-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1.8s ease;
+    }
+
+    #hero-bg-canvas.hero-canvas-visible {
+      opacity: 1;
     }
 
     .hero-copy {
@@ -1692,6 +1709,8 @@
     <!-- Hero Section -->
     <main>
       <section class="hero" id="top">
+        <!-- Persistent 3D robot background -->
+        <canvas id="hero-bg-canvas" aria-hidden="true"></canvas>
         <div class="hero-copy">
           <div class="badge appear appear--pop" style="--d: 0.22s;">
             <svg class="badge-star" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true">
@@ -2714,11 +2733,134 @@
               renderer.dispose();
               renderer.forceContextLoss();
             }
-          }, 850);
+            // Start the hero section 3D background after intro is done
+            initHeroScene();
+          }, 600);
+        } else {
+          if (renderer) { renderer.dispose(); renderer.forceContextLoss(); }
+          initHeroScene();
         }
 
         triggerSiteEntrance();
       }
+
+      // ── Hero Section 3D Background ──────────────────────────────────────
+      function initHeroScene() {
+        const heroCanvas = document.getElementById('hero-bg-canvas');
+        if (!heroCanvas || !window.THREE || !window.THREE.GLTFLoader) return;
+
+        // Resize canvas to hero section
+        const hero = document.getElementById('top');
+        heroCanvas.width  = hero.offsetWidth;
+        heroCanvas.height = hero.offsetHeight;
+
+        const hScene    = new THREE.Scene();
+        hScene.fog      = new THREE.FogExp2(0x000000, 0.045);
+
+        const hCamera   = new THREE.PerspectiveCamera(42, heroCanvas.width / heroCanvas.height, 0.1, 200);
+        hCamera.position.set(0, 1.4, 4.8);
+        hCamera.lookAt(0, 1.1, 0);
+
+        const hRenderer = new THREE.WebGLRenderer({ canvas: heroCanvas, antialias: true, alpha: true });
+        hRenderer.setSize(heroCanvas.width, heroCanvas.height);
+        hRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        hRenderer.toneMapping        = THREE.ACESFilmicToneMapping;
+        hRenderer.toneMappingExposure = 1.1;
+        hRenderer.setClearColor(0x000000, 0);
+
+        // Lighting — cinematic, matching site theme
+        hScene.add(new THREE.AmbientLight(0x080810, 0.6));
+
+        const keyL = new THREE.DirectionalLight(0xffffff, 1.4);
+        keyL.position.set(5, 10, 5);
+        hScene.add(keyL);
+
+        const rimL = new THREE.SpotLight(0xd0d8ff, 3.2, 30, Math.PI / 5, 0.5, 1.2);
+        rimL.position.set(-6, 8, -10);
+        rimL.target.position.set(1.8, 1.2, 0);
+        hScene.add(rimL); hScene.add(rimL.target);
+
+        const rimR = new THREE.SpotLight(0xffffff, 2.4, 30, Math.PI / 5, 0.5, 1.2);
+        rimR.position.set(6, 8, -10);
+        rimR.target.position.set(1.8, 1.2, 0);
+        hScene.add(rimR); hScene.add(rimR.target);
+
+        // Reflective floor
+        const floor = new THREE.Mesh(
+          new THREE.PlaneGeometry(60, 60),
+          new THREE.MeshStandardMaterial({ color: 0x050507, roughness: 0.1, metalness: 0.95 })
+        );
+        floor.rotation.x = -Math.PI / 2;
+        hScene.add(floor);
+
+        let hMixer = null;
+        let hRafId = null;
+        let hClock  = new THREE.Clock();
+        let heroVisible = true;
+        let hAngle = 0; // slow Y-rotation offset for atmosphere
+
+        // Load single robot for hero background
+        const hLoader = new THREE.GLTFLoader();
+        hLoader.load('robot.glb', function(gltf) {
+          const hModel = gltf.scene;
+          hModel.scale.set(1.05, 1.05, 1.05);
+          // Position slightly right-of-center, facing camera with slight angle
+          hModel.position.set(1.8, 0, 0);
+          hModel.rotation.y = -0.25; // slight 3/4 turn toward center
+
+          hModel.traverse(function(child) {
+            if (child.isMesh && child.material) {
+              child.material = child.material.clone();
+              child.material.color          = new THREE.Color(0xd0d0d0);
+              child.material.metalness      = 0.97;
+              child.material.roughness      = 0.12;
+              child.material.envMapIntensity = 2.0;
+            }
+          });
+
+          hScene.add(hModel);
+
+          // Play walk animation at very slow speed for atmospheric idle
+          hMixer = new THREE.AnimationMixer(hModel);
+          const clip = gltf.animations[0];
+          if (clip) {
+            const action = hMixer.clipAction(clip);
+            action.timeScale = 0.35; // very slow — looks like a breathing idle
+            action.play();
+          }
+
+          // Fade in the hero canvas
+          heroCanvas.classList.add('hero-canvas-visible');
+
+          // Render loop
+          (function hRender() {
+            if (!heroVisible) { hRafId = requestAnimationFrame(hRender); return; }
+            const dt = hClock.getDelta();
+            if (hMixer) hMixer.update(dt);
+            // Gentle ambient Y oscillation — robot breathes/sways very slightly
+            hAngle += dt * 0.08;
+            hModel.rotation.y = -0.25 + Math.sin(hAngle) * 0.06;
+            hRenderer.render(hScene, hCamera);
+            hRafId = requestAnimationFrame(hRender);
+          })();
+        });
+
+        // Pause rendering when hero is out of viewport
+        const observer = new IntersectionObserver(function(entries) {
+          heroVisible = entries[0].isIntersecting;
+        }, { threshold: 0.01 });
+        observer.observe(hero);
+
+        // Resize handler
+        window.addEventListener('resize', function() {
+          heroCanvas.width  = hero.offsetWidth;
+          heroCanvas.height = hero.offsetHeight;
+          hCamera.aspect = heroCanvas.width / heroCanvas.height;
+          hCamera.updateProjectionMatrix();
+          hRenderer.setSize(heroCanvas.width, heroCanvas.height);
+        });
+      }
+      // ────────────────────────────────────────────────────────────────────
 
       if (skipBtn) {
         skipBtn.addEventListener('click', finalizeIntro);
