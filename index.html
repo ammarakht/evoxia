@@ -166,19 +166,30 @@
 
     .intro-floating-brand {
       position: absolute;
-      top: 50%;
+      bottom: 18%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%) translateY(24px);
       z-index: 99999;
       display: flex;
       align-items: center;
       gap: 16px;
-      font-size: 56px;
+      font-size: 64px;
       font-weight: 500;
       letter-spacing: -0.04em;
       color: #ffffff;
       pointer-events: none;
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .intro-floating-brand.brand-reveal {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Warp-scale override applied via JS inline style */
+    .intro-floating-brand.brand-warping {
+      transition: none;
     }
 
     .intro-floating-brand em {
@@ -1448,7 +1459,7 @@
 
     @keyframes in-btn {
       0% { opacity: 0; transform: translateY(18px) scale(0.94); }
-      100% { opacity: 1; transform: translateY(0); scale(1); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     @keyframes in-side {
@@ -2298,24 +2309,26 @@
       const startTime = performance.now();
 
       const T_WALK_START = 1200;
-      const T_WALK_END   = 5800;
-      const T_CONTACT    = 8500;
-      const T_WARP_START = 9200;
+      const T_WALK_END   = 5500;  // robots arrive at screen
+      const T_ARM_RAISE  = 5700;  // arms start extending
+      const T_ARM_DONE   = 7500;  // arms fully extended
+      const T_TEXT_IN    = 7800;  // Evoxia text starts appearing
+      const T_CONTACT    = 9000;  // contact / spark
+      const T_WARP_START = 9500;
       const T_FLASH      = 11200;
       const T_REVEAL     = 12000;
 
-      // 4 starting positions (x, z) and angle (Y rotation in radians) so each robot faces the center
-      // They all converge toward the center: (0, 0, -1.5)
+      // All 4 robots face the camera (walk straight forward from depth)
+      // Spread horizontally: far-left, center-left, center-right, far-right
       const ROBOT_CONFIGS = [
-        // From far front-left diagonal
-        { startX: -9,  startZ: -12, targetX: -0.6, targetZ: -1.6, angle: Math.PI * 0.18 },
-        // From far front-right diagonal
-        { startX:  9,  startZ: -12, targetX:  0.6, targetZ: -1.6, angle: -Math.PI * 0.18 },
-        // From far side-left
-        { startX: -14, startZ: -6,  targetX: -1.1, targetZ: -1.4, angle: Math.PI * 0.38 },
-        // From far side-right
-        { startX:  14, startZ: -6,  targetX:  1.1, targetZ: -1.4, angle: -Math.PI * 0.38 },
+        { startX: -3.2, startZ: -18, targetX: -2.4, targetZ: -1.0 },  // far-left
+        { startX: -1.0, startZ: -18, targetX: -0.75, targetZ: -1.2 }, // center-left
+        { startX:  1.0, startZ: -18, targetX:  0.75, targetZ: -1.2 }, // center-right
+        { startX:  3.2, startZ: -18, targetX:  2.4,  targetZ: -1.0 }, // far-right
       ];
+
+      // Track whether brand text has been triggered
+      let brandTextTriggered = false;
 
       function initThreeScene() {
         if (!canvas || !window.THREE) return;
@@ -2377,10 +2390,10 @@
 
         // 3. Contact Point Light & Expanding Shockwave
         contactPointLight = new THREE.PointLight(0xffffff, 0, 10);
-        contactPointLight.position.set(0.15, 1.25, 0.1);
+        contactPointLight.position.set(0, 1.5, 0.5);
         scene.add(contactPointLight);
 
-        const shockwaveGeo = new THREE.RingGeometry(0.05, 0.12, 64);
+        const shockwaveGeo = new THREE.RingGeometry(0.05, 0.15, 64);
         const shockwaveMat = new THREE.MeshBasicMaterial({
           color: 0xffffff,
           side: THREE.DoubleSide,
@@ -2388,7 +2401,8 @@
           opacity: 0
         });
         shockwaveMesh = new THREE.Mesh(shockwaveGeo, shockwaveMat);
-        shockwaveMesh.position.set(0.15, 1.25, 0.1);
+        shockwaveMesh.position.set(0, 1.5, 0.5);
+        shockwaveMesh.rotation.x = -Math.PI / 6;
         scene.add(shockwaveMesh);
 
         // 4. Warp Tunnel Particles
@@ -2446,57 +2460,86 @@
       }
 
       function loadRobotModel() {
-        const loader = new THREE.GLTFLoader();
-        loader.load('robot.glb', function (gltf) {
-          // Spawn 4 robots by cloning the loaded scene for each
-          for (let i = 0; i < ROBOT_CONFIGS.length; i++) {
-            const cfg = ROBOT_CONFIGS[i];
+        let loadedCount = 0;
 
-            // Clone the scene graph (each clone is independent)
-            const modelClone = gltf.scene.clone(true);
-            modelClone.scale.set(1.0, 1.0, 1.0);
-            modelClone.position.set(cfg.startX, 0, cfg.startZ);
-            modelClone.rotation.y = cfg.angle;
+        for (let i = 0; i < ROBOT_CONFIGS.length; i++) {
+          (function(index) {
+            const cfg = ROBOT_CONFIGS[index];
+            const loader = new THREE.GLTFLoader();
 
-            // Apply materials and shadows to this clone
-            modelClone.traverse(function (child) {
-              if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-                if (child.material) {
-                  // Clone materials so each robot can have independent state
-                  child.material = child.material.clone();
-                  child.material.color = new THREE.Color(0xd8d8d8);
-                  child.material.metalness = 0.96;
-                  child.material.roughness = 0.16;
-                  child.material.envMapIntensity = 2.2;
+            loader.load('robot.glb', function (gltf) {
+              const model = gltf.scene;
+              model.scale.set(1.0, 1.0, 1.0);
+              model.position.set(cfg.startX, 0, cfg.startZ);
+              // All robots face camera — rotation.y = 0 shows their FRONT
+              model.rotation.y = 0;
+
+              // Per-robot bone references
+              let armBone = null, foreArmBone = null, handBone = null, rob_shoulderBone = null;
+
+              model.traverse(function (child) {
+                if (child.isMesh) {
+                  child.castShadow = true;
+                  child.receiveShadow = true;
+                  if (child.material) {
+                    child.material = child.material.clone();
+                    child.material.color = new THREE.Color(0xd4d4d4);
+                    child.material.metalness = 0.96;
+                    child.material.roughness = 0.14;
+                    child.material.envMapIntensity = 2.2;
+                  }
                 }
+                if (child.isBone) {
+                  const name = child.name;
+                  // Exact Mixamo bone names for right arm
+                  if (name === 'mixamorigRightShoulder') armBone = child;
+                  if (name === 'mixamorigRightArm')      armBone = armBone || child;
+                  if (name === 'mixamorigRightForeArm')  foreArmBone = child;
+                  if (name === 'mixamorigRightHand')     handBone = child;
+                  // Also grab shoulder bone separately
+                  if (name === 'mixamorigRightShoulder') rob_shoulderBone = child;
+                }
+              });
+
+              // Log bone names once (robot 0) to verify arm bone naming
+              if (index === 0) {
+                const boneNames = [];
+                model.traverse(function(c) { if (c.isBone) boneNames.push(c.name); });
+                console.log('[Evoxia] Robot bones:', boneNames.join(', '));
+                console.log('[Evoxia] Found armBone:', armBone ? armBone.name : 'NONE');
               }
+
+              const mixer = new THREE.AnimationMixer(model);
+              const walkClip = gltf.animations.find(a => a.name.toLowerCase().includes('walk')) || gltf.animations[0];
+              let walkAction = null;
+              if (walkClip) {
+                walkAction = mixer.clipAction(walkClip);
+                walkAction.time = index * (walkClip.duration / ROBOT_CONFIGS.length);
+                walkAction.play();
+              }
+
+              scene.add(model);
+
+              robots.push({
+                model: model,
+                mixer: mixer,
+                walkAction: walkAction,
+                cfg: cfg,
+                armBone: armBone,
+                foreArmBone: foreArmBone,
+                handBone: handBone,
+                shoulderBone: rob_shoulderBone,
+                armRaised: false,
+                walkStopped: false,
+              });
+
+              loadedCount++;
+            }, undefined, function (error) {
+              console.warn('Robot GLB load error (robot ' + index + '):', error);
+              loadedCount++;
             });
-
-            // AnimationMixer needs the original skeleton bones — bind to this clone
-            const mixer = new THREE.AnimationMixer(modelClone);
-            const walkClip = gltf.animations.find(a => a.name.toLowerCase().includes('walk')) || gltf.animations[0];
-            let walkAction = null;
-            if (walkClip) {
-              // Offset the animation phase so they don't step in sync
-              walkAction = mixer.clipAction(walkClip);
-              walkAction.time = i * (walkClip.duration / ROBOT_CONFIGS.length); // stagger phase
-              walkAction.play();
-            }
-
-            scene.add(modelClone);
-
-            robots.push({
-              model: modelClone,
-              mixer: mixer,
-              walkAction: walkAction,
-              cfg: cfg,
-            });
-          }
-        }, undefined, function (error) {
-          console.warn('Local GLB load note:', error);
-        });
+          })(i);
+        }
       }
 
       function onWindowResize() {
@@ -2513,39 +2556,83 @@
         const now = performance.now();
         const elapsed = now - startTime;
 
-        // Update all 4 robot mixers
+        // Update ALL mixers every frame (even "stopped" ones — they are frozen with timeScale=0)
         for (let i = 0; i < robots.length; i++) {
           robots[i].mixer.update(delta);
         }
 
-        // Sequence Phase 1: All 4 Robots Walk From Their Directions (1.2s – 5.8s)
+        // ── PHASE 1: All 4 Robots Walk Straight Toward Camera (1.2s – 5.5s) ──
         for (let i = 0; i < robots.length; i++) {
           const rob = robots[i];
           const { model, walkAction, cfg } = rob;
 
           if (elapsed < T_WALK_START) {
+            // Hold at start, facing camera
             model.position.x = cfg.startX;
             model.position.z = cfg.startZ;
+            model.rotation.y = 0;
           } else if (elapsed >= T_WALK_START && elapsed < T_WALK_END) {
-            // Smooth ease-in-out (smoothstep)
+            // Smooth walk toward camera
             const walkProgress = (elapsed - T_WALK_START) / (T_WALK_END - T_WALK_START);
-            const easeWalk = walkProgress * walkProgress * (3 - 2 * walkProgress);
-            // Interpolate X and Z from start to target
-            model.position.x = cfg.startX + easeWalk * (cfg.targetX - cfg.startX);
-            model.position.z = cfg.startZ + easeWalk * (cfg.targetZ - cfg.startZ);
-
-            // Dynamically face the direction of travel
-            const dx = cfg.targetX - cfg.startX;
-            const dz = cfg.targetZ - cfg.startZ;
-            model.rotation.y = Math.atan2(dx, dz);
-          } else if (elapsed >= T_WALK_END && elapsed < T_CONTACT) {
-            // Arrived — hold position
+            const ease = walkProgress * walkProgress * (3 - 2 * walkProgress); // smoothstep
+            model.position.x = cfg.startX + ease * (cfg.targetX - cfg.startX);
+            model.position.z = cfg.startZ + ease * (cfg.targetZ - cfg.startZ);
+            model.rotation.y = 0; // face camera always
+          } else {
+            // Arrived — hold target position facing camera
             model.position.x = cfg.targetX;
             model.position.z = cfg.targetZ;
-            // Slowly fade walk animation to idle
-            if (walkAction && walkAction.weight > 0.05) {
-              walkAction.weight = THREE.MathUtils.lerp(walkAction.weight, 0, 0.05);
+            model.rotation.y = 0;
+            // Stop walk cycle smoothly
+            if (walkAction && walkAction.weight > 0.01) {
+              walkAction.weight = THREE.MathUtils.lerp(walkAction.weight, 0, 0.04);
             }
+          }
+        }
+
+        // ── PHASE 2: ONE Arm Extends Toward Screen per Robot (5.7s – 7.5s) ──
+        // Mixamo rig, robot facing camera (rotation.y = 0).
+        // Right arm forward toward camera: positive X rotation on mixamorigRightArm lifts arm up/forward.
+        if (elapsed >= T_ARM_RAISE) {
+          const armProgress = Math.min(1, Math.max(0, (elapsed - T_ARM_RAISE) / (T_ARM_DONE - T_ARM_RAISE)));
+          const armEase = armProgress * armProgress * (3 - 2 * armProgress); // smoothstep
+
+          for (let i = 0; i < robots.length; i++) {
+            const rob = robots[i];
+            const { armBone, foreArmBone, handBone, shoulderBone, walkAction, mixer } = rob;
+
+            // Stop walk clip completely so it doesn't fight bone rotations
+            if (!rob.walkStopped && elapsed >= T_ARM_RAISE + 100) {
+              if (walkAction) {
+                // Freeze mid-walk (don't stop — stop() resets to T-pose bind)
+                walkAction.paused = true;
+              }
+              rob.walkStopped = true;
+            }
+
+            // ── ARM POSE: lerp arm bones AFTER mixer.update() ──
+            // Walk is frozen; mixer.update(0) runs but doesn't advance time.
+            // Our bone lerps here override only the right arm from its frozen walk pose.
+            // Mixamo rig, rotation.y=0: right arm bind = sideways (+X).
+            // To swing arm FORWARD toward camera: rotate Y negative (−Y swings +X arm to −Z world).
+            if (armBone) {
+              armBone.rotation.y = THREE.MathUtils.lerp(armBone.rotation.y, -armEase * 1.4, 0.08);
+              armBone.rotation.z = THREE.MathUtils.lerp(armBone.rotation.z, -armEase * 0.15, 0.08);
+            }
+            if (foreArmBone) {
+              foreArmBone.rotation.y = THREE.MathUtils.lerp(foreArmBone.rotation.y, armEase * 0.2, 0.08);
+            }
+            if (handBone) {
+              handBone.rotation.x = THREE.MathUtils.lerp(handBone.rotation.x, armEase * -0.2, 0.08);
+            }
+          }
+        }
+
+        // ── PHASE 3: "Evoxia" Text Materializes Below Hands (7.8s – 9.0s) ──
+        if (elapsed >= T_TEXT_IN && !brandTextTriggered) {
+          brandTextTriggered = true;
+          if (floatingBrand) {
+            floatingBrand.classList.add('brand-reveal');
           }
         }
 
@@ -2570,8 +2657,9 @@
           camera.position.z = 4.5 - warpSpeed * 12;
 
           if (floatingBrand) {
-            floatingBrand.style.transform = `translate(-50%, -50%) scale(${1 + warpSpeed * 8})`;
-            floatingBrand.style.opacity = `${Math.max(0, 1 - warpProgress * 1.5)}`;
+            floatingBrand.classList.add('brand-warping');
+            floatingBrand.style.transform = `translateX(-50%) scale(${1 + warpSpeed * 6})`;
+            floatingBrand.style.opacity = `${Math.max(0, 1 - warpProgress * 1.8)}`;
           }
 
           if (warpParticles) {
