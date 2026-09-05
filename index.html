@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Evoxia — Web, Mobile & Graphic Design Studio</title>
   <meta name="description" content="Evoxia is a premier digital engineering and design agency specializing in full-cycle web development, mobile applications, and world-class UI/UX graphic design.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cg transform='rotate(-30 12 12)'%3E%3Ccircle cx='7.3' cy='3.2' r='1.45'/%3E%3Crect x='5.5' y='4.7' width='3.6' height='14.6' rx='1.8'/%3E%3Crect x='14.9' y='4.7' width='3.6' height='14.6' rx='1.8'/%3E%3Ccircle cx='16.7' cy='20.8' r='1.45'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Crect x='2.5' y='2.5' width='19' height='19' rx='5.5' stroke='white' stroke-width='1.8' stroke-opacity='0.35'/%3E%3Cpath d='M7.5 7.5h8.5M7.5 12h5.5M7.5 16.5h8.5' stroke='white' stroke-width='2.2' stroke-linecap='round'/%3E%3Ccircle cx='16.5' cy='12' r='1.5' fill='%2338bdf8'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
@@ -2639,35 +2639,315 @@
       border-color: rgba(255, 255, 255, 0.3);
       background: rgba(255, 255, 255, 0.09);
     }
+
+    /* ========================================================
+       PLAN 2 / SOLUTION B: NATIVE SPATIAL HUD & STREAM CARDS
+       ======================================================== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: calc(var(--header-h, 80px) + 20px) 24px calc(28px + env(safe-area-inset-bottom, 0px));
+      overflow: hidden;
+      background: #000000;
+      box-sizing: border-box;
+    }
+
+    .hero-stage-hud {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      pointer-events: auto;
+    }
+
+    .hero-hud-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      padding: 5px 14px;
+      border-radius: 999px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      text-transform: uppercase;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.15);
+      margin-bottom: 12px;
+    }
+
+    .hud-led {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8, 0 0 14px #38bdf8;
+      animation: hudLedPulse 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes hudLedPulse {
+      0% { opacity: 0.5; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1.15); }
+    }
+
+    .hero-hud-title {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: clamp(2.8rem, 7.5vw, 5.8rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+      color: #ffffff;
+      text-shadow: 0 0 40px rgba(255, 255, 255, 0.45), 0 0 80px rgba(56, 189, 248, 0.25);
+      margin: 0 0 10px;
+      max-width: 100%;
+      word-break: normal;
+      overflow-wrap: normal;
+    }
+
+    .hero-hud-sub {
+      font-size: clamp(0.9rem, 1.7vw, 1.12rem);
+      color: #a1a1aa;
+      max-width: 580px;
+      margin: 0 auto 20px;
+      line-height: 1.5;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-stream-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto 18px;
+    }
+
+    .hero-stream-card {
+      background: rgba(12, 12, 18, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 12px 16px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      text-decoration: none;
+      color: #ffffff;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.25s ease,
+                  border-color 0.25s ease,
+                  box-shadow 0.25s ease;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-stream-card:hover {
+      transform: translateY(-3px);
+      background: rgba(22, 22, 32, 0.88);
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.2);
+    }
+
+    .stream-card-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: #38bdf8;
+      font-family: monospace;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      padding: 4px 8px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .stream-card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }
+
+    .stream-card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    .stream-card-desc {
+      font-size: 11px;
+      color: #8e8e99;
+      line-height: 1.35;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .hero-scroll-cue-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #e4e4e7;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 8px 18px;
+      border-radius: 999px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-scroll-cue-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(2px);
+    }
+
+    .watermark-shield {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 240px;
+      height: 160px;
+      pointer-events: none;
+      background: radial-gradient(circle at 85% 85%, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.6) 50%, transparent 80%);
+      z-index: 5;
+    }
+
+    .intro-close-btn {
+      position: absolute;
+      top: calc(24px + env(safe-area-inset-top, 0px));
+      left: calc(24px + env(safe-area-inset-left, 0px));
+      z-index: 50;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(14, 14, 18, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e4e4e7;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+    .intro-close-btn:hover {
+      transform: scale(1.08);
+      color: #ffffff;
+      background: rgba(26, 26, 34, 0.88);
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    /* Responsive adjustments for Mobile & Tablet */
+    @media (max-width: 900px) {
+      .hero-stream-cards {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .stream-card-desc {
+        display: none;
+      }
+      .hero-stream-card {
+        padding: 8px 10px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: calc(var(--header-h, 64px) + 12px) 16px calc(20px + env(safe-area-inset-bottom, 0px));
+        justify-content: flex-end;
+      }
+      .hero-hud-title {
+        font-size: clamp(2.3rem, 11vw, 3.4rem);
+        letter-spacing: -0.03em;
+        margin-bottom: 6px;
+      }
+      .hero-hud-sub {
+        font-size: 12px;
+        margin-bottom: 14px;
+        padding: 0 10px;
+      }
+      .hero-stream-cards {
+        grid-template-columns: 1fr;
+        gap: 7px;
+        max-width: 340px;
+        margin-bottom: 14px;
+      }
+      .hero-stream-card {
+        padding: 8px 12px;
+        background: rgba(14, 14, 22, 0.8);
+      }
+      .stream-card-desc {
+        display: none;
+      }
+      .hero-scroll-cue-btn {
+        font-size: 10px;
+        padding: 6px 14px;
+      }
+    }
   </style>
 </head>
-<body class="intro-active" style="background:#000;color:#fff">
+<body class="site-revealed" style="background:#000;color:#fff">
 
   <!-- ========================================================
        EVOXIA CINEMATIC INTRODUCTION & PRELOADER OVERLAY
        ======================================================== -->
-  <div id="evoxia-intro-overlay" class="intro-overlay" role="dialog" aria-modal="true" aria-label="Evoxia Cinematic Introduction">
+  <div id="evoxia-intro-overlay" class="intro-overlay" role="dialog" aria-modal="true" aria-label="Evoxia Cinematic Introduction" style="display: none;">
     <!-- Pure Cinematic Video Stage -->
     <div class="intro-video-container">
       <div class="intro-video-wrapper">
         <video
           id="intro-video"
           class="intro-video"
-          src="Wand_casts_magic_ray_202609051137.mp4"
+          src="make_of_these_robots_walks_ma_202609051746.mp4"
           autoplay
           muted
           playsinline
           webkit-playsinline
           disablepictureinpicture
           disableremoteplayback
-          preload="auto"
+          preload="none"
           tabindex="-1"
           aria-label="Evoxia Introduction Prelude"
         ></video>
+        <div class="watermark-shield" aria-hidden="true"></div>
       </div>
       <div class="intro-vignette" aria-hidden="true"></div>
       <div class="intro-ambient-glow" aria-hidden="true"></div>
     </div>
+
+    <!-- Intro Close / Return Button -->
+    <button type="button" id="intro-close-btn" class="intro-close-btn" aria-label="Close Introduction" title="Return to Website">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
 
     <!-- Aesthetic Floating Silent / Audio Toggle Button -->
     <button type="button" id="intro-sound-toggle" class="intro-silent-btn" aria-label="Toggle Sound" title="Sound Muted / Click to Unmute">
@@ -2701,13 +2981,10 @@
     <!-- Sticky Navigation Header -->
     <header class="header" id="main-header">
       <a href="#top" class="logo appear appear--scale" style="--d: 0.08s;" aria-label="Evoxia">
-        <svg class="logo-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <g transform="rotate(-30 12 12)">
-            <circle cx="7.3" cy="3.2" r="1.45"/>
-            <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8"/>
-            <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8"/>
-            <circle cx="16.7" cy="20.8" r="1.45"/>
-          </g>
+        <svg class="logo-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" stroke-width="1.8" stroke-opacity="0.35"/>
+          <path d="M7.5 7.5h8.5M7.5 12h5.5M7.5 16.5h8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="16.5" cy="12" r="1.5" fill="#38bdf8"/>
         </svg>
         <span>Evoxia<span class="logo-suffix">.studio</span></span>
       </a>
@@ -2759,16 +3036,20 @@
             <video
               id="hero-cinematic-video"
               class="hero-cinematic-video"
-              src="make_of_these_robots_walks_ma.mp4"
+              src="make_of_these_robots_walks_ma_202609051746.mp4"
+              autoplay
+              loop
               muted
               playsinline
               webkit-playsinline
               disablepictureinpicture
               disableremoteplayback
-              preload="none"
+              preload="auto"
               tabindex="-1"
               aria-label="Evoxia 4-Robot Team Cinematic Assembly"
             ></video>
+            <!-- Defensive Procedural Watermark Shield Mask -->
+            <div class="watermark-shield" aria-hidden="true"></div>
           </div>
           <canvas id="hero-waves-canvas" class="hero-waves-canvas" aria-hidden="true"></canvas>
           <div class="hero-specular-shimmer" id="hero-specular-shimmer" aria-hidden="true"></div>
@@ -2778,14 +3059,44 @@
           <div class="hero-ambient-lights" aria-hidden="true"></div>
         </div>
 
-        <!-- Integrated Scroll Cue -->
-        <div class="hero-bottom-bar">
-          <a href="#services" class="hero-scroll-cue" id="hero-scroll-cue" aria-label="Scroll to explore Evoxia capabilities">
-            <span class="cue-badge">
-              <span class="cue-pulse-bulb"></span>
-              <span>SCROLL TO EXPLORE</span>
-            </span>
-            <svg class="cue-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Plan 2 / Solution B: Native Spatial HUD & Continuous Stream UI -->
+        <div class="hero-stage-hud">
+          <div class="hero-hud-badge">
+            <span class="hud-led"></span>
+            <span>STUDIO RUNTIME // 2026</span>
+          </div>
+          <h1 class="hero-hud-title">EVOXIA</h1>
+          <p class="hero-hud-sub">Where elite software engineering meets fluid mobile architecture.</p>
+
+          <!-- Continuous Stream Cards (Direct Continuous Flow) -->
+          <div class="hero-stream-cards" aria-label="Studio Capabilities">
+            <a href="#services" class="hero-stream-card">
+              <span class="stream-card-num">01</span>
+              <div class="stream-card-info">
+                <span class="stream-card-title">Full-Cycle Web</span>
+                <span class="stream-card-desc">Scalable microservices &amp; Next.js runtimes</span>
+              </div>
+            </a>
+            <a href="#services" class="hero-stream-card">
+              <span class="stream-card-num">02</span>
+              <div class="stream-card-info">
+                <span class="stream-card-title">Fluid Mobile</span>
+                <span class="stream-card-desc">60 FPS native iOS &amp; Android systems</span>
+              </div>
+            </a>
+            <a href="#services" class="hero-stream-card">
+              <span class="stream-card-num">03</span>
+              <div class="stream-card-info">
+                <span class="stream-card-title">Spatial UI/UX</span>
+                <span class="stream-card-desc">Modern design systems &amp; visual identity</span>
+              </div>
+            </a>
+          </div>
+
+          <!-- Integrated Scroll Cue Prompt -->
+          <a href="#services" class="hero-scroll-cue-btn" id="hero-scroll-cue" aria-label="Scroll to explore Evoxia capabilities">
+            <span>Swipe up to explore capabilities</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>
             </svg>
           </a>
@@ -2823,20 +3134,9 @@
         <!-- Hero Stats Bar -->
         <div class="hero-stats-bar appear appear--soft" style="--d: 1.2s;">
           <div class="stat-item">
-            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="pillGrad1" x1="3" y1="2" x2="14" y2="22" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
-                  <stop offset="100%" stop-color="#3a3a3a" stop-opacity="0.6"/>
-                </linearGradient>
-                <linearGradient id="pillGrad2" x1="13" y1="2" x2="24" y2="22" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#3a3a3a" stop-opacity="0.4"/>
-                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0.6"/>
-                </linearGradient>
-              </defs>
-              <rect x="3.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#pillGrad1)"/>
-              <rect x="13.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#pillGrad2)"/>
-              <rect x="9.2" y="10.9" width="5.6" height="2.2" rx="1.1" fill="#4a4a4a"/>
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
             </svg>
             <span>Full-Cycle Web &amp; Mobile Engineering</span>
           </div>
@@ -3356,13 +3656,10 @@
       <div class="footer-content">
         <div class="footer-left">
           <div class="logo">
-            <svg class="logo-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <g transform="rotate(-30 12 12)">
-                <circle cx="7.3" cy="3.2" r="1.45"/>
-                <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8"/>
-                <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8"/>
-                <circle cx="16.7" cy="20.8" r="1.45"/>
-              </g>
+            <svg class="logo-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" stroke-width="1.8" stroke-opacity="0.35"/>
+              <path d="M7.5 7.5h8.5M7.5 12h5.5M7.5 16.5h8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              <circle cx="16.5" cy="12" r="1.5" fill="#38bdf8"/>
             </svg>
             <span>Evoxia<span class="logo-suffix">.studio</span></span>
           </div>
@@ -3539,6 +3836,7 @@
       const introOverlay = document.getElementById('evoxia-intro-overlay');
       const introVideo = document.getElementById('intro-video');
       const introSoundBtn = document.getElementById('intro-sound-toggle');
+      const introCloseBtn = document.getElementById('intro-close-btn');
       const replayIntroBtn = document.getElementById('replay-intro-btn');
       const heroVideo = document.getElementById('hero-cinematic-video');
       const ambientVideo = document.getElementById('ambient-backdrop-video');
@@ -3553,7 +3851,6 @@
       }
 
       function finishIntro() {
-        if (introFinished) return;
         introFinished = true;
 
         if (introVideo) {
@@ -3564,7 +3861,7 @@
           introOverlay.classList.add('intro-hidden');
           setTimeout(() => {
             introOverlay.style.display = 'none';
-          }, 900);
+          }, 600);
         }
 
         document.body.classList.remove('intro-active');
@@ -3574,9 +3871,11 @@
         const appears = document.querySelectorAll('.appear');
         appears.forEach(el => el.classList.add('is-in'));
 
-        // Start hero video playback smoothly (dedicated single decoder)
+        activateWaves();
+
+        // Start hero video playback smoothly
         if (heroVideo) {
-          heroVideo.currentTime = 0;
+          heroVideo.loop = true;
           const playPromise = heroVideo.play();
           if (playPromise !== undefined) {
             playPromise.catch(e => {
@@ -3598,6 +3897,9 @@
         }
       }
 
+      // Solution 2 / Plan B: Initialize hero experience immediately (Zero-Modal Flow)
+      finishIntro();
+
       function replayIntro() {
         introFinished = false;
         if (heroVideo) {
@@ -3617,6 +3919,13 @@
           introVideo.currentTime = 0;
           introVideo.play().catch(e => console.warn('Replay play:', e));
         }
+      }
+
+      if (introCloseBtn) {
+        introCloseBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          finishIntro();
+        });
       }
 
       if (replayIntroBtn) {
@@ -3718,25 +4027,13 @@
       // ========================================================
       if (heroVideo) {
         let cueShown = false;
-        let freezeAtEnd = false;
 
         heroVideo.addEventListener('timeupdate', () => {
-          // As robots arrive and stack hands, activate live floating waves and specular shimmer
-          if (heroVideo.currentTime >= 5.5) {
-            activateWaves();
-          }
+          activateWaves();
 
-          if (!cueShown && heroVideo.currentTime >= 4.0) {
+          if (!cueShown && heroVideo.currentTime >= 2.0) {
             cueShown = true;
             if (scrollCue) scrollCue.classList.add('cue-visible');
-          }
-
-          // Freeze video cleanly on final hand-stack frame (around 8.65s)
-          const targetFreeze = (heroVideo.duration && heroVideo.duration > 2) ? (heroVideo.duration - 0.12) : 8.65;
-          if (!freezeAtEnd && heroVideo.currentTime >= targetFreeze) {
-            freezeAtEnd = true;
-            heroVideo.pause();
-            activateWaves();
           }
         });
 
@@ -3746,12 +4043,7 @@
             scrollCue.classList.add('cue-visible');
           }
           activateWaves();
-        }, 5000);
-
-        heroVideo.addEventListener('ended', () => {
-          heroVideo.pause();
-          activateWaves();
-        });
+        }, 3000);
       }
 
       if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && heroVideo) {
