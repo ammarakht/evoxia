@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evoxia — Cinematic Introduction</title>
+  <meta name="description" content="Experience the official cinematic prelude to Evoxia Studio — Digital Engineering, Fluid Mobile Systems, and World-Class Brand Design.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cg transform='rotate(-30 12 12)'%3E%3Ccircle cx='7.3' cy='3.2' r='1.45'/%3E%3Crect x='5.5' y='4.7' width='3.6' height='14.6' rx='1.8'/%3E%3Crect x='14.9' y='4.7' width='3.6' height='14.6' rx='1.8'/%3E%3Ccircle cx='16.7' cy='20.8' r='1.45'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      color: #ffffff;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient noise */
+    .grain {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Fullscreen Cinematic Container */
+    .intro-viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      background: #000000;
+    }
+
+    /* Video Canvas Layer */
+    .video-stage {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      filter: contrast(1.06) brightness(0.98);
+      transform: scale(1.01);
+      transition: filter 0.5s ease;
+    }
+
+    /* Subtle Cinematic Vignette */
+    .vignette-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0.9) 100%),
+                  linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, transparent 16%, transparent 75%, rgba(0, 0, 0, 0.95) 100%);
+    }
+
+    /* Ambient Dynamic Glow */
+    .ambient-glow {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.15) 0%, rgba(129, 140, 248, 0.08) 35%, transparent 70%);
+      mix-blend-mode: screen;
+      animation: ambientBreathing 4.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientBreathing {
+      0% { opacity: 0.35; transform: scale(0.95); }
+      100% { opacity: 0.85; transform: scale(1.05); }
+    }
+
+    /* Top Bar */
+    .top-bar {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 40px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .brand-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 26px;
+      height: 26px;
+      fill: #ffffff;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      text-transform: uppercase;
+    }
+
+    .pulsing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+      animation: dotPulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.25); }
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .glass-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 40px;
+      padding: 0 16px;
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: #f1f5f9;
+      background: rgba(18, 18, 24, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .glass-btn:hover {
+      background: rgba(30, 30, 42, 0.9);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-portal {
+      background: linear-gradient(135deg, #1e1e28 0%, #2e2e40 100%);
+      border-color: rgba(255, 255, 255, 0.32);
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .btn-portal:hover {
+      border-color: rgba(255, 255, 255, 0.6);
+      background: linear-gradient(135deg, #2e2e40 0%, #44445c 100%);
+    }
+
+    .key-hint {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 6px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 4px;
+      margin-left: 2px;
+    }
+
+    /* Sound Waves */
+    .sound-bars {
+      display: inline-flex;
+      align-items: center;
+      gap: 2.5px;
+      height: 12px;
+    }
+
+    .sound-bars span {
+      width: 2px;
+      background: #38bdf8;
+      border-radius: 1px;
+      transition: height 0.2s ease;
+    }
+
+    .btn-sound.is-active .sound-bars span:nth-child(1) { height: 6px; animation: sWave 0.8s ease infinite alternate; }
+    .btn-sound.is-active .sound-bars span:nth-child(2) { height: 12px; animation: sWave 0.6s ease infinite 0.15s alternate; }
+    .btn-sound.is-active .sound-bars span:nth-child(3) { height: 8px; animation: sWave 0.7s ease infinite 0.3s alternate; }
+
+    @keyframes sWave {
+      0% { height: 3px; }
+      100% { height: 12px; }
+    }
+
+    .btn-sound:not(.is-active) .sound-bars span {
+      height: 3px;
+      opacity: 0.4;
+      background: #64748b;
+    }
+
+    /* Center Play/Pause Overlay Indicator */
+    .center-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .center-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 36px;
+      border-radius: 20px;
+      background: rgba(10, 10, 15, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .center-badge.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .center-badge h2 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+
+    .center-badge p {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    /* Bottom Control Bar */
+    .bottom-bar {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 24px 40px 36px;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+    }
+
+    .timeline-container {
+      position: relative;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      cursor: pointer;
+      transition: height 0.2s ease;
+    }
+
+    .timeline-container:hover {
+      height: 8px;
+    }
+
+    .timeline-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+      box-shadow: 0 0 14px rgba(129, 140, 248, 0.9);
+      position: relative;
+      transition: width 0.06s linear;
+    }
+
+    .timeline-scrubber {
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .timeline-container:hover .timeline-scrubber {
+      opacity: 1;
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .left-controls {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .time-display {
+      font-family: monospace, "SF Mono", "Consolas", monospace;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: #cbd5e1;
+    }
+
+    .phase-label {
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: #38bdf8;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .right-controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-launch {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 42px;
+      padding: 0 20px;
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #000000;
+      background: #ffffff;
+      border: 1px solid #ffffff;
+      border-radius: 9px;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-launch:hover {
+      background: #f1f5f9;
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.7);
+    }
+
+    @media (max-width: 768px) {
+      .top-bar {
+        padding: 16px 20px;
+      }
+      .brand-title {
+        font-size: 15px;
+      }
+      .brand-logo {
+        width: 22px;
+        height: 22px;
+      }
+      .brand-badge, .key-hint, .phase-label {
+        display: none;
+      }
+      .glass-btn {
+        height: 36px;
+        padding: 0 12px;
+        font-size: 11.5px;
+      }
+      .bottom-bar {
+        padding: 18px 20px max(24px, calc(env(safe-area-inset-bottom) + 16px));
+        gap: 12px;
+      }
+      .time-display {
+        font-size: 11px;
+      }
+      .btn-launch {
+        height: 38px;
+        padding: 0 14px;
+        font-size: 12.5px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .top-bar {
+        padding: 14px 16px;
+      }
+      .top-actions {
+        gap: 8px;
+      }
+      .glass-btn {
+        padding: 0 10px;
+        font-size: 11px;
+        gap: 5px;
+      }
+      .controls-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .left-controls {
+        justify-content: space-between;
+        width: 100%;
+      }
+      .right-controls {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+      .btn-launch {
+        width: 100%;
+        height: 44px;
+        justify-content: center;
+        font-size: 13.5px;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="intro-viewport" id="intro-viewport">
+    <!-- Video Stage -->
+    <div class="video-stage">
+      <video
+        id="cinematic-video"
+        class="main-video"
+        src="Wand_casts_magic_ray_202609051137.mp4"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+      ></video>
+      <div class="vignette-overlay" aria-hidden="true"></div>
+      <div class="ambient-glow" aria-hidden="true"></div>
+    </div>
+
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <a href="index.html" class="brand-wrap">
+        <svg class="brand-logo" viewBox="0 0 24 24" aria-hidden="true">
+          <g transform="rotate(-30 12 12)">
+            <circle cx="7.3" cy="3.2" r="1.45"/>
+            <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+            <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+            <circle cx="16.7" cy="20.8" r="1.45"/>
+          </g>
+        </svg>
+        <span class="brand-title">EVOXIA</span>
+        <span class="brand-badge"><span class="pulsing-dot"></span>INTRODUCTORY PRELUDE</span>
+      </a>
+
+      <div class="top-actions">
+        <button type="button" id="sound-btn" class="glass-btn btn-sound" aria-label="Toggle Sound">
+          <span class="sound-bars" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span id="sound-text">SOUND: MUTED</span>
+        </button>
+
+        <a href="index.html" class="glass-btn btn-portal" aria-label="Enter Studio">
+          <span>ENTER STUDIO</span>
+          <span class="key-hint">ESC</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- Center Play/Pause Indicator -->
+    <div class="center-overlay" aria-hidden="true">
+      <div class="center-badge" id="center-badge">
+        <h2 id="center-title">Evoxia Prelude</h2>
+        <p id="center-desc">Click anywhere to unmute / toggle playback</p>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <footer class="bottom-bar">
+      <!-- Scrubbable Timeline -->
+      <div class="timeline-container" id="timeline" role="slider" aria-label="Video scrubber" tabindex="0">
+        <div class="timeline-fill" id="timeline-fill">
+          <div class="timeline-scrubber"></div>
+        </div>
+      </div>
+
+      <div class="controls-row">
+        <div class="left-controls">
+          <button type="button" class="icon-btn" id="play-pause-btn" aria-label="Play or Pause">
+            <svg id="play-icon" style="display:none" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+            <svg id="pause-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+
+          <button type="button" class="icon-btn" id="restart-btn" aria-label="Restart Video" title="Restart">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          </button>
+
+          <div class="time-display" id="time-display">00:00 / 00:10</div>
+
+          <div class="phase-label" id="phase-label">
+            <span class="pulsing-dot"></span>
+            <span>INITIALIZING ECOSYSTEM</span>
+          </div>
+        </div>
+
+        <div class="right-controls">
+          <button type="button" class="icon-btn" id="fullscreen-btn" aria-label="Toggle Fullscreen" title="Fullscreen">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          </button>
+
+          <a href="index.html" class="btn-launch" id="enter-site-btn">
+            <span>ENTER EVOXIA STUDIO</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const video = document.getElementById('cinematic-video');
+      const soundBtn = document.getElementById('sound-btn');
+      const soundText = document.getElementById('sound-text');
+      const playPauseBtn = document.getElementById('play-pause-btn');
+      const playIcon = document.getElementById('play-icon');
+      const pauseIcon = document.getElementById('pause-icon');
+      const restartBtn = document.getElementById('restart-btn');
+      const timeline = document.getElementById('timeline');
+      const timelineFill = document.getElementById('timeline-fill');
+      const timeDisplay = document.getElementById('time-display');
+      const phaseLabel = document.getElementById('phase-label');
+      const fullscreenBtn = document.getElementById('fullscreen-btn');
+      const centerBadge = document.getElementById('center-badge');
+      const enterSiteBtn = document.getElementById('enter-site-btn');
+
+      function formatTime(s) {
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return (m < 10 ? '0' + m : m) + ':' + (sec < 10 ? '0' + sec : sec);
+      }
+
+      function updateUI() {
+        if (!video.duration) return;
+        const pct = (video.currentTime / video.duration) * 100;
+        timelineFill.style.width = pct + '%';
+        timeDisplay.textContent = formatTime(video.currentTime) + ' / ' + formatTime(video.duration);
+
+        if (pct < 28) {
+          phaseLabel.innerHTML = '<span class="pulsing-dot"></span><span>[01/04] INITIALIZING SPATIAL CANVAS</span>';
+        } else if (pct < 60) {
+          phaseLabel.innerHTML = '<span class="pulsing-dot"></span><span>[02/04] SYNTHESIZING NEURAL ASSETS</span>';
+        } else if (pct < 88) {
+          phaseLabel.innerHTML = '<span class="pulsing-dot"></span><span>[03/04] CALIBRATING 3D MOTION MATRIX</span>';
+        } else {
+          phaseLabel.innerHTML = '<span class="pulsing-dot"></span><span>[04/04] EVOXIA STUDIO READY</span>';
+        }
+      }
+
+      function togglePlay() {
+        if (video.paused) {
+          video.play();
+          playIcon.style.display = 'none';
+          pauseIcon.style.display = 'block';
+        } else {
+          video.pause();
+          playIcon.style.display = 'block';
+          pauseIcon.style.display = 'none';
+        }
+      }
+
+      function toggleSound() {
+        video.muted = !video.muted;
+        if (!video.muted) {
+          video.volume = 0.95;
+          soundBtn.classList.add('is-active');
+          soundText.textContent = 'SOUND: ACTIVE';
+        } else {
+          soundBtn.classList.remove('is-active');
+          soundText.textContent = 'SOUND: MUTED';
+        }
+      }
+
+      soundBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSound();
+      });
+
+      playPauseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        togglePlay();
+      });
+
+      restartBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        video.currentTime = 0;
+        video.play();
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+      });
+
+      fullscreenBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => console.warn(err));
+        } else {
+          document.exitFullscreen().catch(err => console.warn(err));
+        }
+      });
+
+      // Scrub timeline
+      let isDragging = false;
+      function scrub(e) {
+        const rect = timeline.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const pos = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        if (video.duration) {
+          video.currentTime = pos * video.duration;
+        }
+        updateUI();
+      }
+
+      timeline.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        scrub(e);
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) scrub(e);
+      });
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      video.addEventListener('timeupdate', updateUI);
+      video.addEventListener('ended', () => {
+        // When video ends, smoothly transition to index.html
+        window.location.href = 'index.html';
+      });
+
+      // Click video background to toggle sound or play
+      document.querySelector('.video-stage').addEventListener('click', () => {
+        if (video.muted) {
+          toggleSound();
+        } else {
+          togglePlay();
+        }
+      });
+
+      // Keyboard navigation
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' || e.key === 'Enter') {
+          window.location.href = 'index.html';
+        } else if (e.code === 'Space') {
+          e.preventDefault();
+          togglePlay();
+        } else if (e.key === 'm' || e.key === 'M') {
+          toggleSound();
+        } else if (e.key === 'f' || e.key === 'F') {
+          fullscreenBtn.click();
+        }
+      });
+
+      // Try autoplay
+      video.play().catch(() => {
+        const kick = () => {
+          video.play();
+          window.removeEventListener('click', kick);
+        };
+        window.addEventListener('click', kick);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1596,113 +1596,778 @@
       filter: none !important;
     }
 
-    /* Responsive Breakpoints */
+    /* ========================================================
+       MASTER RESPONSIVE BREAKPOINTS & MOBILE LUXURY AESTHETICS
+       ======================================================== */
+
+    /* Nav Links Wrapper & Mobile Nav Footer Defaults (Desktop) */
+    .nav-links-wrap {
+      display: contents;
+    }
+
+    .mobile-nav-footer {
+      display: none !important;
+    }
+
+    /* Tablet & Medium Screens (<= 1024px) */
     @media (max-width: 1024px) {
+      :root {
+        --header-x: 28px;
+        --section-pad: 80px 24px;
+      }
+
       .services-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
       }
+
       .team-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
       }
+
       .socials-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
       }
+
       .contact-layout {
         grid-template-columns: 1fr;
         gap: 32px;
       }
+
+      .hero-stats-bar {
+        padding: 18px 24px;
+        gap: 16px;
+      }
     }
 
+    /* Small Tablets & Large Phones (<= 900px) */
     @media (max-width: 900px) {
       :root {
         --header-x: 20px;
-        --h1: 38px;
+        --header-y: 14px;
+        --h1: clamp(34px, 8vw, 44px);
         --section-pad: 72px 20px;
       }
 
-      .intro-floating-brand {
-        font-size: 38px;
-      }
-
-      .intro-brand-svg {
-        width: 32px;
-        height: 32px;
-      }
-
       header.header {
-        grid-template-columns: 1fr auto auto;
+        grid-template-columns: 1fr auto;
         gap: 12px;
+        padding: var(--header-y) var(--header-x);
+      }
+
+      header.header.scrolled {
+        padding: 10px var(--header-x);
       }
 
       .burger {
         display: grid;
       }
 
+      .header-right {
+        gap: 10px;
+      }
+
+      /* Mobile Navigation Overlay Drawer */
+      .nav-links-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        max-width: 360px;
+      }
+
       nav.site-nav {
         position: fixed;
         inset: 0;
+        width: 100vw;
+        height: 100dvh;
         z-index: 75;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        gap: 12px;
-        background: transparent;
-        padding: 96px 24px 32px;
-        padding-top: max(96px, calc(env(safe-area-inset-top) + 88px));
+        background: rgba(6, 6, 9, 0.96);
+        backdrop-filter: blur(36px);
+        -webkit-backdrop-filter: blur(36px);
+        padding: 88px 24px 36px;
+        padding-top: max(88px, calc(env(safe-area-inset-top) + 76px));
+        padding-bottom: max(32px, calc(env(safe-area-inset-bottom) + 24px));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.28s ease, visibility 0.28s ease;
+        transform: translateY(-10px) scale(0.98);
+        transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                    visibility 0.32s ease;
       }
 
       body.menu-open nav.site-nav {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
+        transform: translateY(0) scale(1);
       }
 
       nav.site-nav .nav-pill {
         width: 100%;
-        height: 52px;
-        font-size: 17px;
+        height: 50px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: linear-gradient(105deg, rgba(16, 16, 22, 0.9) 0%, rgba(30, 30, 40, 0.9) 100%);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        color: #f1f5f9;
+        justify-content: center;
+      }
+
+      nav.site-nav .nav-pill:hover,
+      nav.site-nav .nav-pill:active {
+        background: linear-gradient(105deg, rgba(32, 32, 44, 0.95) 0%, rgba(55, 55, 75, 0.95) 100%);
+        border-color: rgba(255, 255, 255, 0.45);
+        color: #ffffff;
+        transform: scale(0.99);
+      }
+
+      .mobile-nav-footer {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        max-width: 360px;
+        margin-top: 18px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .mobile-menu-cta {
+        width: 100%;
+        height: 48px;
+        font-size: 15px;
+        font-weight: 600;
         border-radius: 10px;
       }
 
+      .mobile-menu-replay {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 18px;
+        font-size: 13px;
+        color: #cbd5e1;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .mobile-menu-replay:hover,
+      .mobile-menu-replay:active {
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .mobile-menu-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #94a3b8;
+        margin-top: 4px;
+      }
+
+      /* Hero Stage Responsive */
+      section.hero {
+        height: 100dvh;
+        min-height: 560px;
+        padding: 0 0 28px;
+      }
+
+      .hero-cinematic-video {
+        object-position: center 30%;
+      }
+
+      .hero-specular-shimmer {
+        top: 64%;
+        width: clamp(260px, 85vw, 560px);
+        height: 100px;
+      }
+
       .hero-stats-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px 20px;
+        padding: 20px 24px;
+        border-radius: 14px;
       }
 
       .projects-grid {
         grid-template-columns: 1fr;
+        gap: 24px;
       }
 
       .careers-banner {
         flex-direction: column;
         align-items: flex-start;
         padding: 32px 24px;
+        gap: 24px;
+      }
+
+      .careers-banner .btn {
+        width: 100%;
+        max-width: 320px;
       }
     }
 
+    /* Standard Mobile Phones (<= 640px) */
     @media (max-width: 640px) {
-      .services-grid, .team-grid, .socials-grid {
-        grid-template-columns: 1fr;
+      :root {
+        --header-x: 16px;
+        --header-y: 12px;
+        --h1: clamp(28px, 8vw, 36px);
+        --section-pad: 56px 16px;
+      }
+
+      header.header {
+        padding: 12px 16px;
+      }
+
+      .logo {
+        font-size: 15px;
+        gap: 8px;
+      }
+
+      .logo-mark {
+        width: 20px;
+        height: 20px;
+      }
+
+      .header-right {
+        gap: 8px;
+      }
+
+      .header-right .header-cta {
+        padding: 0 14px;
+        height: 36px;
+        font-size: 12.5px;
+      }
+
+      .header-right .replay-intro-btn {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 7px;
+      }
+
+      .header-right .replay-intro-btn span {
+        display: none;
+      }
+
+      .burger {
+        width: 36px;
+        height: 36px;
+        border-radius: 7px;
+      }
+
+      .burger span {
+        width: 14px;
+      }
+
+      /* Hero section mobile adjustments */
+      section.hero {
+        height: 100dvh;
+        min-height: 520px;
+        padding: 0 0 20px;
+      }
+
+      .hero-cinematic-video {
+        object-position: 50% 25%;
+      }
+
+      .hero-bottom-bar {
+        bottom: 22px;
+      }
+
+      .cue-badge {
+        padding: 8px 16px;
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        gap: 7px;
+      }
+
+      /* Hero Content section */
+      section.hero-content {
+        min-height: auto;
+        padding: 72px 16px 48px;
+      }
+
+      .hero-copy {
+        margin-bottom: 32px;
+      }
+
+      .badge {
+        padding: 6px 13px;
+        font-size: 11px;
+        margin-bottom: 16px;
+        gap: 6px;
+      }
+
+      .badge-star {
+        width: 14px;
+        height: 15px;
+      }
+
+      .hero-title {
+        font-size: var(--h1);
+        line-height: 1.15;
+        letter-spacing: -0.04em;
+      }
+
+      .headline-line {
+        padding: 0.02em 0.08em;
+      }
+
+      .lede {
+        font-size: 14px;
+        line-height: 1.55;
+        margin-top: 14px;
+        padding: 0 4px;
       }
 
       .hero-actions {
         flex-direction: column;
         width: 100%;
+        max-width: 320px;
+        gap: 10px;
+        margin-top: 24px;
       }
 
       .hero-actions .btn {
         width: 100%;
+        height: 44px;
+        font-size: 14px;
+      }
+
+      .hero-stats-bar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px 10px;
+        padding: 16px 14px;
+        border-radius: 12px;
+        width: 100%;
+      }
+
+      .stat-item {
+        gap: 8px;
+        font-size: 11.5px;
+        line-height: 1.35;
+      }
+
+      .stat-icon, .stat-icon-wide {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* General Sections Mobile */
+      .section-header {
+        margin-bottom: 32px;
+      }
+
+      .section-tag {
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
       }
 
       .section-heading {
-        font-size: 30px;
+        font-size: clamp(25px, 7.2vw, 32px);
+        line-height: 1.2;
+        letter-spacing: -0.03em;
+        margin-bottom: 10px;
+      }
+
+      .section-subtext {
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      /* Services Grid Mobile */
+      .services-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .service-card {
+        padding: 24px 18px;
+        border-radius: 14px;
+      }
+
+      .service-icon-wrap {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+      }
+
+      .service-card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+
+      .service-card p {
+        font-size: 13.5px;
+        line-height: 1.5;
+        margin-bottom: 18px;
+      }
+
+      .tech-pill {
+        font-size: 11px;
+        padding: 4px 9px;
+      }
+
+      /* Projects Showcase Mobile */
+      .projects-filter {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        justify-content: flex-start;
+        gap: 8px;
+        padding: 4px 2px 14px;
+        margin-bottom: 24px;
+        width: 100%;
+      }
+
+      .projects-filter::-webkit-scrollbar {
+        display: none;
+      }
+
+      .filter-btn {
+        flex-shrink: 0;
+        padding: 7px 15px;
+        font-size: 12.5px;
+      }
+
+      .project-card {
+        border-radius: 14px;
+      }
+
+      .project-preview {
+        height: 180px;
+      }
+
+      .project-preview-mockup {
+        width: 88%;
+        height: 75%;
+        padding: 10px;
+      }
+
+      .project-info {
+        padding: 20px 18px;
+      }
+
+      .project-category {
+        font-size: 11px;
+      }
+
+      .project-title {
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+
+      .project-desc {
+        font-size: 13.5px;
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+
+      .projects-teaser {
+        padding: 18px 16px;
+        border-radius: 12px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        margin-top: 24px;
+      }
+
+      .teaser-text {
+        font-size: 13.5px;
+      }
+
+      .projects-teaser .btn {
+        width: 100%;
+        height: 42px;
+      }
+
+      /* Team Mobile */
+      .team-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .team-card {
+        padding: 22px 16px;
+        border-radius: 14px;
+      }
+
+      .avatar-wrapper {
+        width: 68px;
+        height: 68px;
+        margin-bottom: 14px;
+      }
+
+      .avatar-initials {
+        font-size: 20px;
+      }
+
+      .member-name {
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+
+      .member-role-badge {
+        font-size: 10px;
+        padding: 3px 8px;
+        margin-bottom: 10px;
+      }
+
+      .member-desc {
+        font-size: 13px;
+        line-height: 1.45;
+        margin-bottom: 14px;
+      }
+
+      /* Careers Mobile */
+      .careers-banner {
+        padding: 24px 18px;
+        border-radius: 14px;
+        gap: 18px;
+        margin-top: 28px;
+      }
+
+      .careers-title {
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+
+      .careers-desc {
+        font-size: 13.5px;
+        line-height: 1.5;
+      }
+
+      .careers-banner .btn {
+        width: 100%;
+        height: 44px;
+      }
+
+      /* Socials Mobile (2 columns on mobile) */
+      .socials-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .social-card {
+        padding: 12px 12px;
+        gap: 10px;
+        border-radius: 10px;
+      }
+
+      .social-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+      }
+
+      .social-name {
+        font-size: 13.5px;
+      }
+
+      .social-handle {
+        font-size: 11px;
+      }
+
+      /* Contact Mobile */
+      .contact-layout {
+        gap: 20px;
+      }
+
+      .contact-card {
+        padding: 24px 18px;
+        border-radius: 14px;
+        gap: 18px;
+      }
+
+      .contact-item {
+        gap: 12px;
+      }
+
+      .contact-item-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+      }
+
+      .contact-item h4 {
+        font-size: 14px;
+      }
+
+      .contact-item p, .contact-item a {
+        font-size: 13px;
+      }
+
+      .contact-guarantee {
+        padding: 12px 14px;
+        font-size: 12px;
+        gap: 8px;
+      }
+
+      .contact-form {
+        padding: 24px 18px;
+        border-radius: 14px;
+        gap: 16px;
+      }
+
+      .form-label {
+        font-size: 12.5px;
+      }
+
+      /* 16px input font-size prevents iOS Safari zoom */
+      .form-input, .form-textarea, .form-select {
+        font-size: 16px;
+        padding: 12px 14px;
+        border-radius: 8px;
+      }
+
+      .form-submit-btn {
+        height: 48px;
+        font-size: 14.5px;
+      }
+
+      /* Footer Mobile */
+      footer.site-footer {
+        padding: 44px 16px 28px;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .footer-status {
+        font-size: 11.5px;
+        padding: 5px 12px;
+      }
+
+      /* Toast Mobile */
+      .toast-notification {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        max-width: calc(100vw - 24px);
+        font-size: 13px;
+        padding: 12px 16px;
+      }
+
+      /* Intro overlay mobile */
+      .intro-top-bar {
+        padding: 16px 16px;
+      }
+
+      .intro-brand {
+        font-size: 13.5px;
+        gap: 8px;
+      }
+
+      .intro-brand-mark {
+        width: 20px;
+        height: 20px;
+      }
+
+      .intro-system-tag {
+        display: none;
+      }
+
+      .intro-actions {
+        gap: 8px;
+      }
+
+      .intro-btn {
+        height: 34px;
+        padding: 0 10px;
+        font-size: 11.5px;
+        gap: 5px;
+      }
+
+      .intro-key-badge {
+        display: none;
+      }
+
+      .intro-bottom-bar {
+        padding: 16px 16px 24px;
+        padding-bottom: max(24px, calc(env(safe-area-inset-bottom) + 16px));
+        gap: 8px;
+      }
+
+      .intro-phase-text {
+        font-size: 11px;
+        letter-spacing: 0.02em;
+      }
+
+      .intro-pct-counter {
+        font-size: 13px;
+      }
+
+      .intro-subline {
+        display: none;
+      }
+    }
+
+    /* Small / Narrow Mobile Screens (<= 380px) */
+    @media (max-width: 380px) {
+      :root {
+        --header-x: 12px;
+      }
+
+      header.header {
+        padding: 10px 12px;
+      }
+
+      .header-right .header-cta {
+        padding: 0 10px;
+        font-size: 11.5px;
+      }
+
+      .hero-stats-bar {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .socials-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .intro-top-bar {
+        padding: 12px 12px;
+      }
+
+      .intro-btn {
+        padding: 0 8px;
+        font-size: 11px;
+      }
+
+      .intro-bottom-bar {
+        padding: 12px 12px 18px;
       }
     }
 
@@ -1718,9 +2383,408 @@
         filter: none !important;
       }
     }
+    /* ========================================================
+       CINEMATIC INTRO PRELOADER OVERLAY
+       ======================================================== */
+    body.intro-active {
+      overflow: hidden !important;
+      height: 100vh !important;
+    }
+
+    body.intro-active .page {
+      filter: blur(14px) brightness(0.7);
+      transform: scale(0.98);
+      pointer-events: none;
+      transition: filter 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body.site-revealed .page {
+      filter: blur(0px) brightness(1);
+      transform: scale(1);
+      transition: filter 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .intro-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 99999;
+      background: #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.85s ease;
+      will-change: opacity, transform, filter;
+    }
+
+    .intro-overlay.intro-hidden {
+      opacity: 0;
+      transform: scale(1.04);
+      filter: blur(14px);
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    .intro-video-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+    }
+
+    .intro-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      filter: contrast(1.06) brightness(0.98);
+      transform: scale(1.01);
+      transition: filter 0.5s ease;
+    }
+
+    .intro-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.45) 75%, rgba(0, 0, 0, 0.88) 100%),
+                  linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, transparent 18%, transparent 75%, rgba(0, 0, 0, 0.92) 100%);
+    }
+
+    .intro-ambient-glow {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
+      mix-blend-mode: screen;
+      animation: introAmbientPulse 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes introAmbientPulse {
+      0% { opacity: 0.4; transform: scale(0.96); }
+      100% { opacity: 0.9; transform: scale(1.04); }
+    }
+
+    .intro-top-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 36px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+    }
+
+    .intro-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .intro-brand-mark {
+      width: 24px;
+      height: 24px;
+      color: #ffffff;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+    }
+
+    .intro-system-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: #a1a1aa;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .intro-led {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+      display: inline-block;
+      animation: introLedPulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes introLedPulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .intro-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .intro-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 38px;
+      padding: 0 16px;
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: #f4f4f5;
+      background: rgba(18, 18, 22, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      user-select: none;
+    }
+
+    .intro-btn:hover {
+      background: rgba(30, 30, 38, 0.9);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 12px rgba(255, 255, 255, 0.1);
+    }
+
+    .intro-btn-primary {
+      background: linear-gradient(135deg, #1e1e24 0%, #2a2a34 100%);
+      border-color: rgba(255, 255, 255, 0.28);
+      font-weight: 600;
+    }
+
+    .intro-btn-primary:hover {
+      border-color: rgba(255, 255, 255, 0.55);
+      background: linear-gradient(135deg, #2a2a34 0%, #3a3a48 100%);
+    }
+
+    .intro-key-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 6px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #a1a1aa;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      margin-left: 2px;
+    }
+
+    .intro-sound-wave {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 12px;
+    }
+
+    .intro-sound-wave span {
+      width: 2px;
+      background: #38bdf8;
+      border-radius: 1px;
+      transition: height 0.2s ease;
+    }
+
+    .intro-sound-btn.is-active .intro-sound-wave span:nth-child(1) { height: 6px; animation: introSoundWave 0.8s ease infinite alternate; }
+    .intro-sound-btn.is-active .intro-sound-wave span:nth-child(2) { height: 12px; animation: introSoundWave 0.6s ease infinite 0.15s alternate; }
+    .intro-sound-btn.is-active .intro-sound-wave span:nth-child(3) { height: 8px; animation: introSoundWave 0.7s ease infinite 0.3s alternate; }
+
+    @keyframes introSoundWave {
+      0% { height: 3px; }
+      100% { height: 12px; }
+    }
+
+    .intro-sound-btn:not(.is-active) .intro-sound-wave span {
+      height: 3px;
+      opacity: 0.4;
+      background: #71717a;
+    }
+
+    .intro-bottom-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 24px 36px 36px;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+    }
+
+    .intro-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .intro-phase-text {
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: #e4e4e7;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .intro-pct-counter {
+      font-family: monospace, "SF Mono", "Consolas", monospace;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .intro-progress-track {
+      position: relative;
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .intro-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+      box-shadow: 0 0 12px rgba(129, 140, 248, 0.9);
+      transition: width 0.08s linear;
+    }
+
+    .intro-subline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: #71717a;
+      text-transform: uppercase;
+    }
+
+    .replay-intro-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #a1a1aa;
+      padding: 6px 12px;
+      border-radius: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .replay-intro-btn:hover {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.09);
+    }
   </style>
 </head>
-<body style="background:#000;color:#fff">
+<body class="intro-active" style="background:#000;color:#fff">
+
+  <!-- ========================================================
+       EVOXIA CINEMATIC INTRODUCTION & PRELOADER OVERLAY
+       ======================================================== -->
+  <div id="evoxia-intro-overlay" class="intro-overlay" role="dialog" aria-modal="true" aria-label="Evoxia Cinematic Introduction">
+    <!-- Cinematic Video Stage -->
+    <div class="intro-video-container">
+      <video
+        id="intro-video"
+        class="intro-video"
+        src="Wand_casts_magic_ray_202609051137.mp4"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+        tabindex="-1"
+      ></video>
+      <div class="intro-vignette" aria-hidden="true"></div>
+      <div class="intro-ambient-glow" aria-hidden="true"></div>
+    </div>
+
+    <!-- Top Navigation & Controls Bar -->
+    <div class="intro-top-bar">
+      <div class="intro-brand">
+        <svg class="intro-brand-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <g transform="rotate(-30 12 12)">
+            <circle cx="7.3" cy="3.2" r="1.45"/>
+            <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+            <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+            <circle cx="16.7" cy="20.8" r="1.45"/>
+          </g>
+        </svg>
+        <span>EVOXIA</span>
+        <span class="intro-system-tag"><span class="intro-led"></span>INITIALIZING STUDIO</span>
+      </div>
+
+      <div class="intro-actions">
+        <button type="button" id="intro-sound-toggle" class="intro-btn intro-sound-btn" aria-label="Toggle Introduction Audio">
+          <span class="intro-sound-wave" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span id="intro-sound-label">SOUND: MUTED</span>
+        </button>
+
+        <button type="button" id="intro-skip-btn" class="intro-btn intro-btn-primary" aria-label="Enter Studio Website">
+          <span>ENTER STUDIO</span>
+          <span class="intro-key-badge">ESC</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom System Status & Progress -->
+    <div class="intro-bottom-bar">
+      <div class="intro-status-row">
+        <div class="intro-phase-text" id="intro-status-phase">
+          <span class="intro-led"></span>
+          <span>[01/04] INITIALIZING SPATIAL CANVAS & CORE ENGINE...</span>
+        </div>
+        <div class="intro-pct-counter" id="intro-percentage">0%</div>
+      </div>
+
+      <div class="intro-progress-track" aria-hidden="true">
+        <div class="intro-progress-fill" id="intro-progress-bar"></div>
+      </div>
+
+      <div class="intro-subline">
+        <span>Evoxia Studio // Next-Gen Digital Product Engineering</span>
+        <span>Tap screen or click audio to unmute • Press ESC to skip</span>
+      </div>
+    </div>
+  </div>
 
   <!-- ========================================================
        REAL EVOXIA COMPANY PORTFOLIO WEBSITE
@@ -1749,15 +2813,35 @@
       </a>
 
       <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <a href="#services" class="nav-pill appear appear--scale" style="--d: 0.16s;">Services</a>
-        <a href="#projects" class="nav-pill appear appear--soft" style="--d: 0.24s;">Projects</a>
-        <a href="#team" class="nav-pill appear appear--scale" style="--d: 0.32s;">Team</a>
-        <a href="#careers" class="nav-pill appear appear--soft" style="--d: 0.40s;">Careers</a>
-        <a href="#socials" class="nav-pill appear appear--scale" style="--d: 0.48s;">Socials</a>
-        <a href="#contact" class="nav-pill appear appear--soft" style="--d: 0.56s;">Contact</a>
+        <div class="nav-links-wrap">
+          <a href="#services" class="nav-pill appear appear--scale" style="--d: 0.16s;">Services</a>
+          <a href="#projects" class="nav-pill appear appear--soft" style="--d: 0.24s;">Projects</a>
+          <a href="#team" class="nav-pill appear appear--scale" style="--d: 0.32s;">Team</a>
+          <a href="#careers" class="nav-pill appear appear--soft" style="--d: 0.40s;">Careers</a>
+          <a href="#socials" class="nav-pill appear appear--scale" style="--d: 0.48s;">Socials</a>
+          <a href="#contact" class="nav-pill appear appear--soft" style="--d: 0.56s;">Contact</a>
+        </div>
+        <div class="mobile-nav-footer">
+          <a href="#contact" class="btn btn-solid mobile-menu-cta">
+            <span>Start a Project</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <button type="button" class="mobile-menu-replay" id="mobile-replay-intro-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Replay Intro Animation</span>
+          </button>
+          <div class="mobile-menu-status">
+            <span class="status-bulb"></span>
+            <span>Available for Q3/Q4 Projects</span>
+          </div>
+        </div>
       </nav>
 
       <div class="header-right">
+        <button type="button" id="replay-intro-btn" class="replay-intro-btn appear appear--scale" style="--d: 0.28s;" title="Replay Cinematic Introduction" aria-label="Replay Introduction">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <span>Replay Intro</span>
+        </button>
         <a href="#contact" class="btn btn-solid header-cta appear appear--scale" style="--d: 0.34s;">Start a Project</a>
         <button type="button" class="burger appear appear--scale" style="--d: 0.34s;" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
           <span></span>
@@ -2554,25 +3638,180 @@
       initWavesEngine();
 
       // ========================================================
+      // 2.5 CINEMATIC INTRO PRELOADER & REVEAL CONTROLLER
+      // ========================================================
+      const introOverlay = document.getElementById('evoxia-intro-overlay');
+      const introVideo = document.getElementById('intro-video');
+      const introSkipBtn = document.getElementById('intro-skip-btn');
+      const introSoundBtn = document.getElementById('intro-sound-toggle');
+      const introSoundLabel = document.getElementById('intro-sound-label');
+      const introProgressBar = document.getElementById('intro-progress-bar');
+      const introPctCounter = document.getElementById('intro-percentage');
+      const introPhaseText = document.getElementById('intro-status-phase');
+      const replayIntroBtn = document.getElementById('replay-intro-btn');
+
+      let introFinished = false;
+
+      function updateIntroProgress(pct) {
+        pct = Math.min(100, Math.max(0, pct));
+        if (introProgressBar) introProgressBar.style.width = pct + '%';
+        if (introPctCounter) introPctCounter.textContent = Math.round(pct) + '%';
+
+        if (introPhaseText) {
+          if (pct < 28) {
+            introPhaseText.innerHTML = '<span class="intro-led"></span> [01/04] INITIALIZING SPATIAL CANVAS & CORE RUNTIME...';
+          } else if (pct < 60) {
+            introPhaseText.innerHTML = '<span class="intro-led"></span> [02/04] SYNTHESIZING NEURAL VISUAL ASSETS...';
+          } else if (pct < 88) {
+            introPhaseText.innerHTML = '<span class="intro-led"></span> [03/04] CALIBRATING 3D MOTION & INTERFACE MATRIX...';
+          } else {
+            introPhaseText.innerHTML = '<span class="intro-led"></span> [04/04] EVOXIA STUDIO READY — ENTERING...';
+          }
+        }
+      }
+
+      function finishIntro() {
+        if (introFinished) return;
+        introFinished = true;
+
+        if (introVideo) {
+          introVideo.pause();
+        }
+
+        if (introOverlay) {
+          introOverlay.classList.add('intro-hidden');
+          setTimeout(() => {
+            introOverlay.style.display = 'none';
+          }, 900);
+        }
+
+        document.body.classList.remove('intro-active');
+        document.body.classList.add('site-revealed');
+
+        // Reveal site appear elements smoothly
+        const appears = document.querySelectorAll('.appear');
+        appears.forEach(el => el.classList.add('is-in'));
+
+        // Start hero video playback
+        if (heroVideo) {
+          heroVideo.currentTime = 0;
+          heroVideo.play().catch(e => console.warn('Hero autoplay on finishIntro:', e));
+        }
+
+        // Refresh smooth scroll
+        if (lenis) {
+          lenis.resize();
+        }
+      }
+
+      function replayIntro() {
+        introFinished = false;
+        if (introOverlay) {
+          introOverlay.style.display = 'flex';
+          void introOverlay.offsetWidth; // trigger reflow
+          introOverlay.classList.remove('intro-hidden');
+        }
+        document.body.classList.add('intro-active');
+        document.body.classList.remove('site-revealed');
+
+        window.scrollTo({ top: 0, behavior: 'instant' });
+
+        if (introVideo) {
+          introVideo.currentTime = 0;
+          introVideo.play().catch(e => console.warn('Replay play:', e));
+        }
+        updateIntroProgress(0);
+      }
+
+      if (replayIntroBtn) {
+        replayIntroBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          replayIntro();
+        });
+      }
+
+      if (introSoundBtn && introVideo) {
+        introSoundBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          introVideo.muted = !introVideo.muted;
+          if (!introVideo.muted) {
+            introVideo.volume = 0.95;
+            introSoundBtn.classList.add('is-active');
+            if (introSoundLabel) introSoundLabel.textContent = 'SOUND: ACTIVE';
+          } else {
+            introSoundBtn.classList.remove('is-active');
+            if (introSoundLabel) introSoundLabel.textContent = 'SOUND: MUTED';
+          }
+        });
+      }
+
+      if (introSkipBtn) {
+        introSkipBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          finishIntro();
+        });
+      }
+
+      if (introOverlay && introVideo) {
+        introOverlay.addEventListener('click', (e) => {
+          if (e.target.closest('#intro-skip-btn') || e.target.closest('#intro-sound-toggle')) return;
+          if (introVideo.muted) {
+            introVideo.muted = false;
+            introVideo.volume = 0.95;
+            if (introSoundBtn) introSoundBtn.classList.add('is-active');
+            if (introSoundLabel) introSoundLabel.textContent = 'SOUND: ACTIVE';
+          }
+        });
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (!introFinished && (e.key === 'Escape' || e.key === 'Enter' || e.code === 'Space')) {
+          e.preventDefault();
+          finishIntro();
+        }
+      });
+
+      if (introVideo) {
+        introVideo.addEventListener('timeupdate', () => {
+          if (!introVideo.duration) return;
+          const pct = (introVideo.currentTime / introVideo.duration) * 100;
+          updateIntroProgress(pct);
+
+          if (introVideo.currentTime >= (introVideo.duration - 0.22)) {
+            finishIntro();
+          }
+        });
+
+        introVideo.addEventListener('ended', () => {
+          finishIntro();
+        });
+
+        introVideo.play().catch(err => {
+          console.warn('Intro video autoplay blocked:', err);
+          const startOnInteract = () => {
+            introVideo.play();
+            window.removeEventListener('click', startOnInteract);
+            window.removeEventListener('touchstart', startOnInteract);
+          };
+          window.addEventListener('click', startOnInteract);
+          window.addEventListener('touchstart', startOnInteract);
+        });
+      }
+
+      // Safety timeout: ensure site is revealed even if video fails or is blocked
+      setTimeout(() => {
+        if (!introFinished && (!introVideo || introVideo.paused || introVideo.currentTime === 0)) {
+          finishIntro();
+        }
+      }, 12000);
+
+      // ========================================================
       // 3. HERO CINEMATIC VIDEO & SCROLL CONTROLLER
       // ========================================================
       const heroVideo = document.getElementById('hero-cinematic-video');
       const scrollCue = document.getElementById('hero-scroll-cue');
 
       if (heroVideo) {
-        heroVideo.play().catch(err => {
-          console.warn('Autoplay caught:', err);
-          const playOnInteract = () => {
-            heroVideo.play();
-            window.removeEventListener('click', playOnInteract);
-            window.removeEventListener('touchstart', playOnInteract);
-            window.removeEventListener('scroll', playOnInteract);
-          };
-          window.addEventListener('click', playOnInteract);
-          window.addEventListener('touchstart', playOnInteract);
-          window.addEventListener('scroll', playOnInteract);
-        });
-
         let cueShown = false;
         let freezeAtEnd = false;
 
@@ -2608,7 +3847,6 @@
         }, 4500);
 
         heroVideo.addEventListener('ended', () => {
-          // Keep on final frame if ended event fires
           heroVideo.pause();
           if (wavesCanvas) wavesCanvas.classList.add('canvas-active');
           if (specularShimmer) specularShimmer.classList.add('shimmer-active');
@@ -2631,9 +3869,6 @@
           ease: 'none',
         });
       }
-
-      const appears = document.querySelectorAll('.appear');
-      appears.forEach(el => el.classList.add('is-in'));
 
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -2694,6 +3929,14 @@
           setMenuState(false);
         });
       });
+
+      const mobileReplayIntroBtn = document.getElementById('mobile-replay-intro-btn');
+      if (mobileReplayIntroBtn) {
+        mobileReplayIntroBtn.addEventListener('click', () => {
+          setMenuState(false);
+          replayIntro();
+        });
+      }
 
       if (backdrop) {
         backdrop.addEventListener('click', () => {
