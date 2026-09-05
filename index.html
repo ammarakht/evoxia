@@ -451,6 +451,34 @@
       overflow: hidden;
       z-index: 0;
       pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-cinematic-backdrop {
+      display: none;
+      position: absolute;
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      object-fit: cover;
+      object-position: center;
+      filter: blur(48px) brightness(0.48) saturate(1.25);
+      opacity: 0.65;
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform;
+    }
+
+    .hero-video-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
     }
 
     .hero-cinematic-video {
@@ -1783,21 +1811,82 @@
         margin-top: 4px;
       }
 
-      /* Hero Stage Responsive */
+      /* Hero Stage & Intro Video Cinematic Responsive Framing */
+      .intro-video-backdrop,
+      .hero-cinematic-backdrop {
+        display: block !important;
+      }
+
+      .intro-video-container {
+        padding: 76px 16px 90px;
+        padding-top: max(76px, calc(env(safe-area-inset-top) + 64px));
+        padding-bottom: max(90px, calc(env(safe-area-inset-bottom) + 80px));
+      }
+
+      .intro-video-wrapper {
+        width: 100%;
+        max-width: min(100%, calc((100dvh - 180px) * (16 / 9)));
+        height: auto;
+        aspect-ratio: 16 / 9;
+      }
+
+      .intro-video {
+        position: relative;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        border-radius: 14px;
+        box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+
       section.hero {
         height: 100dvh;
-        min-height: 560px;
-        padding: 0 0 28px;
+        min-height: 520px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0 0 24px;
+      }
+
+      .hero-video-stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .hero-video-wrapper {
+        width: 100%;
+        max-width: min(100%, calc((100dvh - 150px) * (16 / 9)));
+        height: auto;
+        aspect-ratio: 16 / 9;
       }
 
       .hero-cinematic-video {
-        object-position: center 30%;
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        object-position: center center;
+        border-radius: 14px;
+        box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+
+      .hero-bottom-bar {
+        bottom: 24px;
+        z-index: 25;
       }
 
       .hero-specular-shimmer {
-        top: 64%;
-        width: clamp(260px, 85vw, 560px);
-        height: 100px;
+        top: 50%;
+        left: 50%;
+        width: clamp(240px, 80vw, 480px);
+        height: 70px;
       }
 
       .hero-stats-bar {
@@ -1888,12 +1977,8 @@
         padding: 0 0 20px;
       }
 
-      .hero-cinematic-video {
-        object-position: 50% 25%;
-      }
-
       .hero-bottom-bar {
-        bottom: 22px;
+        bottom: 20px;
       }
 
       .cue-badge {
@@ -2440,6 +2525,32 @@
       align-items: center;
       justify-content: center;
       background: #000000;
+      overflow: hidden;
+    }
+
+    .intro-video-backdrop {
+      display: none;
+      position: absolute;
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      object-fit: cover;
+      object-position: center;
+      filter: blur(48px) brightness(0.55) saturate(1.25);
+      opacity: 0.65;
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform;
+    }
+
+    .intro-video-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
     }
 
     .intro-video {
@@ -2721,15 +2832,28 @@
     <!-- Cinematic Video Stage -->
     <div class="intro-video-container">
       <video
-        id="intro-video"
-        class="intro-video"
+        id="intro-video-backdrop"
+        class="intro-video-backdrop"
         src="Wand_casts_magic_ray_202609051137.mp4"
         autoplay
         muted
         playsinline
         preload="auto"
         tabindex="-1"
+        aria-hidden="true"
       ></video>
+      <div class="intro-video-wrapper">
+        <video
+          id="intro-video"
+          class="intro-video"
+          src="Wand_casts_magic_ray_202609051137.mp4"
+          autoplay
+          muted
+          playsinline
+          preload="auto"
+          tabindex="-1"
+        ></video>
+      </div>
       <div class="intro-vignette" aria-hidden="true"></div>
       <div class="intro-ambient-glow" aria-hidden="true"></div>
     </div>
@@ -2856,16 +2980,29 @@
       <section class="hero" id="top">
         <div class="hero-video-stage">
           <video
-            id="hero-cinematic-video"
-            class="hero-cinematic-video"
+            id="hero-cinematic-backdrop"
+            class="hero-cinematic-backdrop"
             src="make_of_these_robots_walks_ma.mp4"
             autoplay
             muted
             playsinline
             preload="auto"
             tabindex="-1"
-            aria-label="Evoxia 4-Robot Team Cinematic Assembly"
+            aria-hidden="true"
           ></video>
+          <div class="hero-video-wrapper">
+            <video
+              id="hero-cinematic-video"
+              class="hero-cinematic-video"
+              src="make_of_these_robots_walks_ma.mp4"
+              autoplay
+              muted
+              playsinline
+              preload="auto"
+              tabindex="-1"
+              aria-label="Evoxia 4-Robot Team Cinematic Assembly"
+            ></video>
+          </div>
           <canvas id="hero-waves-canvas" class="hero-waves-canvas" aria-hidden="true"></canvas>
           <div class="hero-specular-shimmer" id="hero-specular-shimmer" aria-hidden="true"></div>
           <div class="hero-vignette-overlay" aria-hidden="true"></div>
@@ -3642,6 +3779,7 @@
       // ========================================================
       const introOverlay = document.getElementById('evoxia-intro-overlay');
       const introVideo = document.getElementById('intro-video');
+      const introVideoBackdrop = document.getElementById('intro-video-backdrop');
       const introSkipBtn = document.getElementById('intro-skip-btn');
       const introSoundBtn = document.getElementById('intro-sound-toggle');
       const introSoundLabel = document.getElementById('intro-sound-label');
@@ -3677,6 +3815,9 @@
         if (introVideo) {
           introVideo.pause();
         }
+        if (introVideoBackdrop) {
+          introVideoBackdrop.pause();
+        }
 
         if (introOverlay) {
           introOverlay.classList.add('intro-hidden');
@@ -3696,6 +3837,10 @@
         if (heroVideo) {
           heroVideo.currentTime = 0;
           heroVideo.play().catch(e => console.warn('Hero autoplay on finishIntro:', e));
+        }
+        if (heroVideoBackdrop) {
+          heroVideoBackdrop.currentTime = 0;
+          heroVideoBackdrop.play().catch(() => {});
         }
 
         // Refresh smooth scroll
@@ -3719,6 +3864,10 @@
         if (introVideo) {
           introVideo.currentTime = 0;
           introVideo.play().catch(e => console.warn('Replay play:', e));
+        }
+        if (introVideoBackdrop) {
+          introVideoBackdrop.currentTime = 0;
+          introVideoBackdrop.play().catch(() => {});
         }
         updateIntroProgress(0);
       }
@@ -3809,6 +3958,7 @@
       // 3. HERO CINEMATIC VIDEO & SCROLL CONTROLLER
       // ========================================================
       const heroVideo = document.getElementById('hero-cinematic-video');
+      const heroVideoBackdrop = document.getElementById('hero-cinematic-backdrop');
       const scrollCue = document.getElementById('hero-scroll-cue');
 
       if (heroVideo) {
@@ -3816,6 +3966,10 @@
         let freezeAtEnd = false;
 
         heroVideo.addEventListener('timeupdate', () => {
+          if (heroVideoBackdrop && Math.abs(heroVideoBackdrop.currentTime - heroVideo.currentTime) > 0.3) {
+            heroVideoBackdrop.currentTime = heroVideo.currentTime;
+          }
+
           // As robots arrive and stack hands, activate live floating waves and specular shimmer
           if (heroVideo.currentTime >= 6.0) {
             if (wavesCanvas) wavesCanvas.classList.add('canvas-active');
@@ -3832,6 +3986,7 @@
           if (!freezeAtEnd && heroVideo.currentTime >= targetFreeze) {
             freezeAtEnd = true;
             heroVideo.pause();
+            if (heroVideoBackdrop) heroVideoBackdrop.pause();
             if (wavesCanvas) wavesCanvas.classList.add('canvas-active');
             if (specularShimmer) specularShimmer.classList.add('shimmer-active');
           }
@@ -3848,6 +4003,7 @@
 
         heroVideo.addEventListener('ended', () => {
           heroVideo.pause();
+          if (heroVideoBackdrop) heroVideoBackdrop.pause();
           if (wavesCanvas) wavesCanvas.classList.add('canvas-active');
           if (specularShimmer) specularShimmer.classList.add('shimmer-active');
         });

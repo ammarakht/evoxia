@@ -62,6 +62,31 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+    }
+
+    .main-video-backdrop {
+      display: none;
+      position: absolute;
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      object-fit: cover;
+      object-position: center;
+      filter: blur(48px) brightness(0.55) saturate(1.25);
+      opacity: 0.65;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .main-video-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
     }
 
     .main-video {
@@ -436,6 +461,33 @@
       box-shadow: 0 0 30px rgba(255, 255, 255, 0.7);
     }
 
+    @media (max-width: 900px), (max-aspect-ratio: 16/10) {
+      .main-video-backdrop {
+        display: block !important;
+      }
+      .video-stage {
+        padding: 72px 16px 110px;
+        padding-top: max(72px, calc(env(safe-area-inset-top) + 64px));
+        padding-bottom: max(110px, calc(env(safe-area-inset-bottom) + 90px));
+      }
+      .main-video-wrapper {
+        width: 100%;
+        max-width: min(100%, calc((100dvh - 190px) * (16 / 9)));
+        height: auto;
+        aspect-ratio: 16 / 9;
+      }
+      .main-video {
+        position: relative;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        border-radius: 14px;
+        box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+    }
+
     @media (max-width: 768px) {
       .top-bar {
         padding: 16px 20px;
@@ -515,14 +567,27 @@
     <!-- Video Stage -->
     <div class="video-stage">
       <video
-        id="cinematic-video"
-        class="main-video"
+        id="cinematic-video-backdrop"
+        class="main-video-backdrop"
         src="Wand_casts_magic_ray_202609051137.mp4"
         autoplay
         muted
         playsinline
         preload="auto"
+        tabindex="-1"
+        aria-hidden="true"
       ></video>
+      <div class="main-video-wrapper">
+        <video
+          id="cinematic-video"
+          class="main-video"
+          src="Wand_casts_magic_ray_202609051137.mp4"
+          autoplay
+          muted
+          playsinline
+          preload="auto"
+        ></video>
+      </div>
       <div class="vignette-overlay" aria-hidden="true"></div>
       <div class="ambient-glow" aria-hidden="true"></div>
     </div>
@@ -613,6 +678,7 @@
       'use strict';
 
       const video = document.getElementById('cinematic-video');
+      const videoBackdrop = document.getElementById('cinematic-video-backdrop');
       const soundBtn = document.getElementById('sound-btn');
       const soundText = document.getElementById('sound-text');
       const playPauseBtn = document.getElementById('play-pause-btn');
@@ -635,6 +701,10 @@
 
       function updateUI() {
         if (!video.duration) return;
+        if (videoBackdrop && Math.abs(videoBackdrop.currentTime - video.currentTime) > 0.3) {
+          videoBackdrop.currentTime = video.currentTime;
+        }
+
         const pct = (video.currentTime / video.duration) * 100;
         timelineFill.style.width = pct + '%';
         timeDisplay.textContent = formatTime(video.currentTime) + ' / ' + formatTime(video.duration);
@@ -653,10 +723,12 @@
       function togglePlay() {
         if (video.paused) {
           video.play();
+          if (videoBackdrop) videoBackdrop.play().catch(() => {});
           playIcon.style.display = 'none';
           pauseIcon.style.display = 'block';
         } else {
           video.pause();
+          if (videoBackdrop) videoBackdrop.pause();
           playIcon.style.display = 'block';
           pauseIcon.style.display = 'none';
         }
@@ -688,6 +760,10 @@
         e.stopPropagation();
         video.currentTime = 0;
         video.play();
+        if (videoBackdrop) {
+          videoBackdrop.currentTime = 0;
+          videoBackdrop.play().catch(() => {});
+        }
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'block';
       });
