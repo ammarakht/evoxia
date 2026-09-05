@@ -2488,11 +2488,12 @@
       inset: 0;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       z-index: 99999;
       background: #000000;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
       transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
                   transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
@@ -2510,26 +2511,57 @@
     }
 
     .intro-video-container {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #000000;
-      overflow: hidden;
-    }
-
-    .intro-video-wrapper {
       position: relative;
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #000000;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    /* Ambient backdrop glow behind the floating card */
+    .intro-ambient-backlight {
+      position: absolute;
+      width: 90vw;
+      max-width: 920px;
+      aspect-ratio: 16 / 9;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.28) 0%, rgba(56, 189, 248, 0.16) 40%, transparent 70%);
+      filter: blur(55px);
+      pointer-events: none;
+      z-index: 1;
+      animation: ambientBacklightPulse 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientBacklightPulse {
+      0% { transform: scale(0.92); opacity: 0.5; }
+      100% { transform: scale(1.08); opacity: 0.88; }
+    }
+
+    .intro-video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 94vw;
+      aspect-ratio: 16 / 9;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95), 0 0 40px rgba(99, 102, 241, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       z-index: 2;
+    }
+
+    @media (min-width: 1024px) {
+      .intro-video-wrapper {
+        max-width: 1060px;
+        border-radius: 24px;
+      }
     }
 
     .intro-video {
@@ -2539,32 +2571,27 @@
       object-position: center;
       display: block;
       filter: contrast(1.06) brightness(0.98);
-      transform: scale(1.01);
-      transition: filter 0.5s ease;
+      transform: scale(1.005);
     }
 
     .intro-vignette {
       position: absolute;
       inset: 0;
-      z-index: 2;
+      z-index: 3;
       pointer-events: none;
-      background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.45) 75%, rgba(0, 0, 0, 0.88) 100%),
-                  linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, transparent 18%, transparent 75%, rgba(0, 0, 0, 0.92) 100%);
+      background: radial-gradient(circle at center, transparent 45%, rgba(0, 0, 0, 0.35) 80%, rgba(0, 0, 0, 0.8) 100%);
     }
 
-    .intro-ambient-glow {
+    /* Watermark Shield precisely concealing Gemini AI sparkle star in bottom right */
+    .intro-watermark-shield {
       position: absolute;
-      inset: 0;
-      z-index: 2;
+      bottom: 0;
+      right: 0;
+      width: 160px;
+      height: 95px;
       pointer-events: none;
-      background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
-      mix-blend-mode: screen;
-      animation: introAmbientPulse 4s ease-in-out infinite alternate;
-    }
-
-    @keyframes introAmbientPulse {
-      0% { opacity: 0.4; transform: scale(0.96); }
-      100% { opacity: 0.9; transform: scale(1.04); }
+      background: radial-gradient(circle at 88% 85%, #000000 0%, rgba(0, 0, 0, 0.92) 50%, transparent 80%);
+      z-index: 10;
     }
 
     /* Minimalist, Unique Aesthetic Silent / Sound Button */
@@ -2912,41 +2939,38 @@
     }
   </style>
 </head>
-<body class="site-revealed" style="background:#000;color:#fff">
+<body class="intro-active" style="background:#000;color:#fff">
 
   <!-- ========================================================
        EVOXIA CINEMATIC INTRODUCTION & PRELOADER OVERLAY
        ======================================================== -->
-  <div id="evoxia-intro-overlay" class="intro-overlay" role="dialog" aria-modal="true" aria-label="Evoxia Cinematic Introduction" style="display: none;">
-    <!-- Pure Cinematic Video Stage -->
+  <div id="evoxia-intro-overlay" class="intro-overlay" role="dialog" aria-modal="true" aria-label="Evoxia Cinematic Introduction">
+    <!-- Pure Floating Keynote Cinema Stage -->
     <div class="intro-video-container">
+      <div class="intro-ambient-backlight" aria-hidden="true"></div>
       <div class="intro-video-wrapper">
         <video
           id="intro-video"
           class="intro-video"
-          src="make_of_these_robots_walks_ma_202609051746.mp4"
+          src="Wand_casts_magic_ray_202609051137.mp4"
           autoplay
           muted
           playsinline
           webkit-playsinline
           disablepictureinpicture
           disableremoteplayback
-          preload="none"
+          preload="auto"
           tabindex="-1"
           aria-label="Evoxia Introduction Prelude"
         ></video>
-        <div class="watermark-shield" aria-hidden="true"></div>
+        <div class="intro-vignette" aria-hidden="true"></div>
+        <div class="intro-watermark-shield" aria-hidden="true"></div>
       </div>
-      <div class="intro-vignette" aria-hidden="true"></div>
-      <div class="intro-ambient-glow" aria-hidden="true"></div>
     </div>
 
-    <!-- Intro Close / Return Button -->
-    <button type="button" id="intro-close-btn" class="intro-close-btn" aria-label="Close Introduction" title="Return to Website">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
+    <!-- Discreet Minimalist Skip Cue -->
+    <button type="button" id="intro-skip-btn" class="intro-skip-pill" aria-label="Skip Introduction">
+      <span>Skip →</span>
     </button>
 
     <!-- Aesthetic Floating Silent / Audio Toggle Button -->
@@ -3836,7 +3860,7 @@
       const introOverlay = document.getElementById('evoxia-intro-overlay');
       const introVideo = document.getElementById('intro-video');
       const introSoundBtn = document.getElementById('intro-sound-toggle');
-      const introCloseBtn = document.getElementById('intro-close-btn');
+      const introSkipBtn = document.getElementById('intro-skip-btn');
       const replayIntroBtn = document.getElementById('replay-intro-btn');
       const heroVideo = document.getElementById('hero-cinematic-video');
       const ambientVideo = document.getElementById('ambient-backdrop-video');
@@ -3851,6 +3875,7 @@
       }
 
       function finishIntro() {
+        if (introFinished) return;
         introFinished = true;
 
         if (introVideo) {
@@ -3861,7 +3886,7 @@
           introOverlay.classList.add('intro-hidden');
           setTimeout(() => {
             introOverlay.style.display = 'none';
-          }, 600);
+          }, 850);
         }
 
         document.body.classList.remove('intro-active');
@@ -3897,9 +3922,6 @@
         }
       }
 
-      // Solution 2 / Plan B: Initialize hero experience immediately (Zero-Modal Flow)
-      finishIntro();
-
       function replayIntro() {
         introFinished = false;
         if (heroVideo) {
@@ -3921,9 +3943,10 @@
         }
       }
 
-      if (introCloseBtn) {
-        introCloseBtn.addEventListener('click', (e) => {
+      if (introSkipBtn) {
+        introSkipBtn.addEventListener('click', (e) => {
           e.preventDefault();
+          e.stopPropagation();
           finishIntro();
         });
       }
@@ -3964,7 +3987,7 @@
       // Clicking anywhere on pure intro video screen toggles sound (or triggers initial user interaction)
       if (introOverlay && introVideo) {
         introOverlay.addEventListener('click', (e) => {
-          if (e.target.closest('#intro-sound-toggle')) return;
+          if (e.target.closest('#intro-sound-toggle') || e.target.closest('#intro-skip-btn')) return;
           if (introVideo.muted) {
             introVideo.muted = false;
             introVideo.volume = 0.95;
